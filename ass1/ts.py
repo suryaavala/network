@@ -9,9 +9,9 @@ host = sys.argv[1]
 
 sock = socket(AF_INET, SOCK_DGRAM)
 sock.settimeout(1)
-#sock.bind((str(host),0))
+sock.bind((str(host),0))
 
-#port = sock.getsockname()[1]
+print(sock.getsockname(),sock.getsockname()[1])
 port = 5967
 
 for message in 'abcdefghijklmnopqrstuvwxyz':
