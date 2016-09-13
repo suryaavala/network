@@ -11,7 +11,7 @@ sock = socket(AF_INET, # Internet
 sock.bind((ip, port))
 
 while True:
-    data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
+    data, addr = sock.recvfrom(100) # buffer size is 1024 bytes
     #print ("received message:", data.decode('ascii'))
     #print ("from address:", addr)
     print ("sent message: {} to address {}".format(data,addr))
