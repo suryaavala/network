@@ -20,14 +20,20 @@ class header:
         #self.head = {"sport":None, "dport":None, "seq_nb":None, "ack_nb":None, "ACK":"0", "SYN":"0", "FIN":"0", "RST":"0"}
         self.head = {}
         for f in self.fields:
-            self.head[f] = None
+            self.head[f] = "0"
         return
+
+    def get_head(self):
+        return self.head
 
     def get_fields(self):
         return self.fields
 
-    def get_head(self):
-        return self.head
+    def get_values(self):
+        values = []
+        for i in self.get_fields():
+            values.append(self.head[i])
+        return values
 
     def get_item(self,item):
         return self.head[str(item)]
@@ -47,6 +53,4 @@ if __name__ == '__main__':
 
     print (h.get_head())
     print (h.get_fields())
-
-    for f in h.fields:
-        print("{} : {}".format(f,h.get_item(f)), sep=', ')
+    print (h.get_values())
