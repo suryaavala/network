@@ -4,6 +4,7 @@
 #All functions for stp protocol reside here
 from socket import *
 import time
+import random
 
 #importing header file
 from stp_header import *
@@ -16,9 +17,10 @@ class stp_socket:
         self.dip = None
         self.dport = None
         self.timeout = None
-        self.seq_nb = 0 #seq number of the last message sent
-        self.ack_nb = 0 #seq number of the last message whose ack was received
+        self.seq_nb = int(random.random()*100) #seq number of the last message sent
+        self.ack_nb = -1 #seq number of the last message whose ack was received
         self.timeout = 10
+        self.sock.settimeout(self.timeout)
 
 
     def _send(self,message):
@@ -37,6 +39,7 @@ class stp_socket:
         Input: listens at source port for a message
         '''
         self.sip, self.sport = self.sock.getsockname()
+        received_msg,received_addr = "Nope","Nope"
         received_msg, received_addr = self.sock.recvfrom(1024)
         received_msg = received_msg.decode('ascii')
 
@@ -72,9 +75,19 @@ class stp_socket:
         #send SYN + sequence number
         #listen for SYNACK + ack number
         #send ACK + acknum
+
+        ########seding SYN#########
         head = header()
-        head.set_item("SYN","1")
-        head.set_item("seq_nb",)
+        head_values = list(map(str,[self.sip,self.dip,self.seq_nb,self.ack_nb,0,1,0,0]))
+        head.set_all(head_values)
+        pay = "".encode('ascii')
+        message = self._build_message(head,pay)
+        self._send(message)
+
+
+        ###########listening for SYNACK###########
+        r_message, r_addr = self._receive()
+        print ("#########",r_message)
         return
 
 
@@ -95,12 +108,14 @@ if __name__ == '__main__':
     pay = "surya avinash avala".encode('ascii')
     message = s._build_message(h,pay)
     s._send(message)
-    s._send("final message")
-    r_msg = ""
-    while (not r_msg):
-        r_msg, r_add = s._receive()
-    print ("received_msg: {} from address {}".format(r_msg,r_add))
+    # s._send("final message")
+    # r_msg = ""
+    # while (not r_msg):
+    #     r_msg, r_add = s._receive()
+    # print ("received_msg: {} from address {}".format(r_msg,r_add))
+    #
+    # print ("\n\n\n")
+    # s.print_all()
 
-    print ("\n\n\n")
-    s.print_all()
+    s.init_hshake()
     s.close()
