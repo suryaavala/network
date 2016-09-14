@@ -1,5 +1,6 @@
 #STP header feilds
-#dict containing following key,value pairs
+#list, fields containing following keys
+#dict, head containing key, value pairs
 #1. source port #
 #2. dest port #
 #3. seq_nb
@@ -9,9 +10,10 @@
 #7. FIN
 #8. RST
 #example ['1234', '1234', '100000', '4294967295', '4294967295', '0', '1', '1', '1']
+
 #max len of header = 46 bytes
 #b'1234+1234+100000+4294967295+4294967295+0+1+1+1'
-
+#min len of header = 18 bytes
 
 class header:
 
@@ -42,8 +44,16 @@ class header:
         self.head[item] = str(value)
         return
 
+    def set_all(self,values):
+        for f in range(0,len(self.fields)):
+            self.head[self.fields[f]] = values[f]
+        return
+
+
 
 if __name__ == '__main__':
+    import sys
+    values = ['1234','4321','55','900','1','0','0','0']
     h = header()
     print (h.get_head())
     h.set_item("sport",1234)
@@ -54,3 +64,9 @@ if __name__ == '__main__':
     print (h.get_head())
     print (h.get_fields())
     print (h.get_values())
+
+    p = header()
+    print (p.get_head())
+    p.set_all(values)
+    print (p.get_head())
+    print (p.get_fields(),p.get_values(), sep='\n')

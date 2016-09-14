@@ -18,10 +18,8 @@ class stp_socket:
         self.timeout = None
         self.seq_nb = 0 #seq number of the last message sent
         self.ack_nb = 0 #seq number of the last message whose ack was received
+        self.timeout = 10
 
-    def connect(self,*dest):
-        self.dip = str(dest[0])
-        self.dport = str(dest[1])
 
     def _send(self,message):
         '''
@@ -35,9 +33,13 @@ class stp_socket:
         return
 
     def _receive(self):
+        '''
+        Input: listens at source port for a message
+        '''
+        self.sip, self.sport = self.sock.getsockname()
         received_msg, received_addr = self.sock.recvfrom(1024)
         received_msg = received_msg.decode('ascii')
-        self.sip, self.sport = self.sock.getsockname()
+
         return (received_msg,received_addr)
 
     def _build_message(self,header,payload):
@@ -61,9 +63,18 @@ class stp_socket:
         self.sock.close()
         return
 
+    def connect(self,*dest):
+        self.dip = str(dest[0])
+        self.dport = str(dest[1])
+        #self.init_hshake()
+
     def init_hshake(self):
         #send SYN + sequence number
-        #receive SYNACK +
+        #listen for SYNACK + ack number
+        #send ACK + acknum
+        head = header()
+        head.set_item("SYN","1")
+        head.set_item("seq_nb",)
         return
 
 
