@@ -61,7 +61,6 @@ if __name__ == '__main__':
     s.connect(('127.0.0.1',5678))
     s.set_timeout(10)
     s.print_all()
-    s.get_param('sport')
     s.close()
 
     print ('ran')
