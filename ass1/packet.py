@@ -55,6 +55,30 @@ class packet:
             return ((self.get_header(),self.get_payload(),self.get_hfield_all()))
         return ((self.get_header(),self.get_payload()))
 
+    def get_bits(self):
+        '''
+        Input:  None
+        Output: Returns a string concatenated from the bits in header field in the default order (ACK,SYN,FIN,DATA)
+        '''
+        head_values = self.get_header()
+        bits = "".join(head_values[4:])
+        return bits
+
+    def get_seq(self):
+        '''
+        Input:  None
+        Output: Returns seq_nb from packet header as a string
+        '''
+        return str(self.get_header()[2])
+
+    def get_ack(self):
+        '''
+        Input:  None
+        Output: Returns ack_nb from packet header as a string
+        '''
+        return str(self.get_header()[3])
+
+
     def build_header(self,values):
         '''
         Input:  Takes list of header values as Input
