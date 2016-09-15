@@ -39,10 +39,11 @@ class stp_socket:
         Input: listens at source port for a message
         '''
         self.sip, self.sport = self.sock.getsockname()
-        received_msg,received_addr = "Nope","Nope"
-        received_msg, received_addr = self.sock.recvfrom(1024)
-        received_msg = received_msg.decode('ascii')
-
+        try:
+            received_msg, received_addr = self.sock.recvfrom(1024)
+            received_msg = received_msg.decode('ascii')
+        except timeout:
+            return ("timeout", "timeout")
         return (received_msg,received_addr)
 
     def _build_message(self,header,payload):
