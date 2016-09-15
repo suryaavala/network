@@ -1,5 +1,6 @@
 #STP packet
 #header fields ["sport","dport","seq_nb","ack_nb","ACK","SYN","FIN","DATA"]
+#payload as string
 
 class packet:
 
