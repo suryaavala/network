@@ -1,3 +1,7 @@
+#Bug1: Receiver has to be started/run first otherwise sync sent by the sender is lost and
+#   the sender is stuck in an infinite loop waiting for sycnack
+#   the receiver is stuck in an infinite loop waiting for sync
+
 from socket import *
 import time
 import random
@@ -14,9 +18,12 @@ class mysocket:
         self.dip = None
         self.dport = None
         self.timeout = None
-        self.seq_nb = str(int(random.random()*100))
-        self.ack_nb = str(-1)
+        self.seq_nb = str(int(random.random()*100)) #my sequence number transmitted
+        self.ack_nb = str(-1) #ack number sent
+        self.received_acknb = None #ack received
+        self.isn = self.seq_nb
         #can implement self.sock_status to keep track of connection
+        self.connection_established = None
 
 #socket send, receive, handshake, change param.
     def bind(self,port=None):
@@ -67,7 +74,7 @@ class mysocket:
         Input:  None
         Output: Prints values of all socket variable
         '''
-        print("sock: {}\nsource port: {}\ndest ip: {}\ndest port {}\ntimeout: {}".format(self.sock, self.sport,self.dip,self.dport,self.timeout))
+        print("sock: {}\nsource port: {}\ndest ip: {}\ndest port {}\ntimeout: {}\nseq_nb: {}\nack_nb: {}\nisn: {}\nack_received_for: {}\nconnection established: {}".format(self.sock, self.sport,self.dip,self.dport,self.timeout,self.seq_nb,self.ack_nb,self.isn,self.received_acknb,self.connection_established))
         return
 
     def init_handshake(self):
@@ -90,13 +97,28 @@ class mysocket:
         while (not syn_sent):
             pack = packet()
             pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,0,1,0,0])
-            pack.build_payload("")
             syn_sent = self._send(pack)
+###can be improved keep sending syn requests until we receive an syncack back from receiver
+        #listen for SYNACK
+        received_synack = False
+        while (not received_synack):
+            pack, addr = self._receive()
+            if pack:
+                bits = pack.get_bits()
+                if bits == '1100':
+                    received_synack = True
+        receiver_seq_nb = pack.get_seq()
+        self.received_acknb = int(pack.get_ack())
+        self.ack_nb = str(int(receiver_seq_nb)+1)
 
-        #listen for ACK
-        synack_received = False
-        p = self._receive()
-        print (p.get_packet())
+        #sending ACK + acknum (Y+1)
+        ack_sent = False
+        while (not ack_sent):
+            pack = packet()
+            pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,1,0,0,0])
+            ack_sent = self._send(pack)
+
+        self.connection_established = syn_sent and received_synack and ack_sent
         return
 
     def accept_handshake(self):
@@ -115,24 +137,38 @@ class mysocket:
         #Listening for SYN + seq_nb
         received_syn = False
         while (not received_syn):
-            pack = self._receive()
+            pack, addr = self._receive()
             if pack:
-                received_syn = True
-        bits = pack.get_bits()
+                bits = pack.get_bits()
+                if bits == '0100':
+                    received_syn = True
         receiver_seq_nb = pack.get_seq()
-        self.ack_nb = receiver_seq_nb+1
-
+        self.ack_nb = str(int(receiver_seq_nb)+1)
+        self.dip, self.dport = addr[0], str(addr[1])
         #sending SYNACK + ack number (X+1) + seq_nb (Y)
         synack_sent = False
         while (not synack_sent):
             pack = packet()
             pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,1,1,0,0])
-            pack.build_payload("")
             synack_sent = self._send(pack)
+        #Listening for ACK + acknum (Y+1)
+#improvement: keep sending syncack until ack is received back
+        received_ack = False
+        while (not received_ack):
+            pack, addr = self._receive()
+            if pack:
+                bits = pack.get_bits()
+                if bits == '1000':
+                    received_ack = True
+        self.received_acknb = pack.get_ack()
+
+        self.connection_established = received_syn and synack_sent and received_ack
         return
 
-
-
+    def send_file(self,file):
+        '''
+        Sender function to transmit file, connection should have been established already
+        '''
 
 
     def _send(self,pack):
@@ -150,14 +186,14 @@ class mysocket:
     def _receive(self):
         '''
         Input:  None
-        Output: Returns the packet object which was received
+        Output: Returns a tuple of packet object (which was received) and addr
         '''
         try:
             msg, addr = self.sock.recvfrom(1024)
             pack = pickle.loads(msg)
         except timeout:
             return None
-        return pack
+        return (pack, addr)
 
 
 
@@ -174,11 +210,12 @@ if __name__ == '__main__':
     s = mysocket()
     s.connect(('127.0.0.1',5967))
     # s.set_timeout(10)
-    # s.print_all()
+    s.print_all()
     # p = packet()
     # p.build_payload('surya')
     # print(s._send(p))
-    s.init_handshake()
+    print (s.init_handshake())
+    s.print_all()
     s.close()
 
     print ('ran')

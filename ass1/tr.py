@@ -26,4 +26,6 @@ port = 5967
 #     #     break
 s = mysocket()
 s.bind(port)
-s.accept_handshake()
+print(s.accept_handshake())
+s.print_all()
+s.close()
