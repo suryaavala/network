@@ -26,8 +26,10 @@ class mysocket:
         self.connection_established = None
         self.pdrop = None
         self.seed = None
-        self.mss = None #bytes
+        self.mss =  None #bytes
         self.mws = None #bytes
+        #time
+        self.origin_time = None
 
 #socket send, receive, handshake, change param.
     def bind(self,port=None):
@@ -116,6 +118,13 @@ class mysocket:
             pack = packet()
             pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,0,1,0,0])
             syn_sent = self._send(pack)
+
+        #<snd/rcv/drop> <time> <type of packet> <seq-number> <number-ofbytes> <ack-number>
+#######log###########
+#####################
+#####################
+        self.origin_time = time.time()
+
 ###can be improved keep sending syn requests until we receive an syncack back from receiver
         #listen for SYNACK
         received_synack = False
@@ -129,12 +138,24 @@ class mysocket:
         self.received_acknb = int(pack.get_ack())
         self.ack_nb = str(int(receiver_seq_nb)+1)
 
+        #<snd/rcv/drop> <time> <type of packet> <seq-number> <number-ofbytes> <ack-number>
+#######log###########
+#####################
+#####################
+
+
         #sending ACK + acknum (Y+1)
         ack_sent = False
         while (not ack_sent):
             pack = packet()
             pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,1,0,0,0])
             ack_sent = self._send(pack)
+
+        #<snd/rcv/drop> <time> <type of packet> <seq-number> <number-ofbytes> <ack-number>
+#######log###########
+#####################
+#####################
+
 
         self.connection_established = syn_sent and received_synack and ack_sent
         return
@@ -185,7 +206,7 @@ class mysocket:
 
     def send_file(self,file):
         '''
-        Sender function to transmit file, connection should have been established already
+        Sender function to transmit file, connection should have been established already and set_param() must have been called
         Input: Takes string <path>/file_name.txt as the input argument
         Output: Tries to reliably send the file Object accross to receiver
         '''
@@ -199,6 +220,14 @@ class mysocket:
         #mss
             #len(pack.payload()) <= mss
 
+#error handling can be added
+        send_file = open(file, 'rb')
+        file_data = send_file.read()
+        payloads = []
+        for i in range(0,len(file_data),self.mss):
+            payload = (i,file_data[i:i+self.mss])
+            payloads.append(payload)
+        return
 
 
     def _send(self,pack):
@@ -239,13 +268,15 @@ if __name__ == '__main__':
     print ("running")
     s = mysocket()
     s.connect(('127.0.0.1',5967))
-    # s.set_timeout(10)
+    s.set_timeout(10)
     s.set_param(10, 40, 0, 50)
     s.print_all()
     # p = packet()
     # p.build_payload('surya')
     # print(s._send(p))
-    print (s.init_handshake())
+    #print (s.init_handshake())
+    #s.set_param(50, 200, 0, 50)
+    print (s.send_file('send_file.txt'))
     s.print_all()
     s.close()
 
