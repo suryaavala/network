@@ -78,6 +78,22 @@ class packet:
         '''
         return str(self.get_header()[3])
 
+    def packet_type(self):
+        '''
+        Input: None
+        Output: Type of packet as a string A,S, F, D
+        '''
+        bits = self.get_bits()
+        types = "ASFD"
+        packet_type = ''
+        for b in range(0,len(bits)):
+            if int(bits[b]):
+                packet_type += types[b]
+        return packet_type
+
+
+
+
 
     def build_header(self,values):
         '''

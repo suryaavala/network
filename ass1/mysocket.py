@@ -24,6 +24,10 @@ class mysocket:
         self.isn = self.seq_nb
         #can implement self.sock_status to keep track of connection
         self.connection_established = None
+        self.pdrop = None
+        self.seed = None
+        self.mss = None #bytes
+        self.mws = None #bytes
 
 #socket send, receive, handshake, change param.
     def bind(self,port=None):
@@ -60,6 +64,20 @@ class mysocket:
         self.timeout = int(timeout)
         self.sock.settimeout(self.timeout)
         return
+
+    def set_param(self,mss,mws,pdrop,seed):
+        '''
+        Input:  pdrop as an float for the probability of dropping packet
+                seed as an int for generating the random number
+
+        Output: Binds those values to appropriate variables
+        '''
+        self.mss = mss
+        self.mws = mws
+        self.pdrop = pdrop
+        self.seed = seed
+
+
 
     def close(self):
         '''
@@ -168,7 +186,19 @@ class mysocket:
     def send_file(self,file):
         '''
         Sender function to transmit file, connection should have been established already
+        Input: Takes string <path>/file_name.txt as the input argument
+        Output: Tries to reliably send the file Object accross to receiver
         '''
+
+
+        #loop for sending
+        #if rand > pdrop: transmit
+            #else: drop packet
+        #mws
+            #self.seq_nb-(self.received_acknb-1) <= mws
+        #mss
+            #len(pack.payload()) <= mss
+
 
 
     def _send(self,pack):
@@ -210,6 +240,7 @@ if __name__ == '__main__':
     s = mysocket()
     s.connect(('127.0.0.1',5967))
     # s.set_timeout(10)
+    s.set_param(10, 40, 0, 50)
     s.print_all()
     # p = packet()
     # p.build_payload('surya')
