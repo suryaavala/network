@@ -325,11 +325,12 @@ class mysocket:
     def _pld_send(self,packet):
 
         rand = random.random()
-        print (rand)
+        #print (rand)
         if rand > self.pdrop/100:
             self._send(packet)
             return
         #print ("asked to drop")
+        print ("dropped: {}, and ack pack is {}".format(packet.get_packet(),packet.get_seq()))
         self._log(packet, "drp")
         return
 
@@ -361,21 +362,38 @@ class mysocket:
         data = {}
         size = True
         expected_seq = self.ack_nb
+        buff = {}
         while True:
             pack, addr = self._receive()
             print (pack.get_packet())
             if pack.packet_type() == 'F':
                 break
             if not data: #getting the expected packet size after receiving the first packet
-                self.mss = len(pack.get_payload())
+                #print (type(self.ack_nb),type(int(len(pack.get_payload()))) )
+                self.mss = int(len(pack.get_payload()))
+                expected_seq = int(self.ack_nb)+1
 
-            self.ack_nb = int(pack.get_seq())
-            data [self.ack_nb] = pack.get_payload()
+            if int(pack.get_seq()) == expected_seq: #the seq received is expected then go ahead append to data and send an ack for it
+                expected_seq += self.mss
+                self.ack_nb = int(pack.get_seq())
+                data [self.ack_nb] = pack.get_payload()
+            elif not buff: #if there is not buffer then add the packet to buffer
+                buff[int(pack.get_seq())] = pack.get_payload()
+
+            if buff: #if buffer then check all the items in the buffer if expected pack is there in the buffer
+                for b in sorted(buff):
+                    if b == expected_seq:
+                        data[b] = buff.pop(b, None)
+                        self.ack_nb = expected_seq
+                        expected_seq += self.mss
+
+
             ack = packet()
             ack.build_header([self.sport,self.dport,self.seq_nb,int(self.ack_nb),'1','0','0','0'])
             self.seq_nb = str(int(self.seq_nb)+len(ack.get_payload()))
             self._send(ack)
             print ("sent ack with num: {}, and ack pack is {}".format(int(self.ack_nb), ack.get_packet()))
+
             #print (pack.get_packet())
 
         for d in sorted(data):
