@@ -20,7 +20,7 @@ class mysocket:
         self.dport = None
         self.timeout = None
         self.seq_nb = str(int(random.random()*100)) #my sequence number transmitted
-        self.ack_nb = 0 #ack number sent
+        self.ack_nb = -1 #ack number sent
         self.received_acknb = str(0) #ack received
         self.isn = self.seq_nb
         #can implement self.sock_status to keep track of connection
@@ -239,6 +239,8 @@ class mysocket:
         file_data = send_file.read()
         self.data_len = len(file_data)
         payloads = {}
+        self.print_all()
+        print (self.seq_nb,self.ack_nb, self.received_acknb)
         for i in range(0,len(file_data),self.mss):
             payload = file_data[i:i+self.mss]
             payloads[i+int(self.seq_nb)] = payload
