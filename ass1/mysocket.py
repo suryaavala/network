@@ -303,20 +303,21 @@ class mysocket:
                 #print ("received: {}, at: {}".format(pack.get_packet(),addr))
                 self.received_acknb = (int(pack.get_ack()))
                 #print ("ACK NB RECEIVED: {}, last_packet: {}, sequence number: {}".format(self.received_acknb, last_packet,self.seq_nb))
+                print ("received:\t{}".format(pack.get_ack()))
 
             timed_out = self._check_timeout(sent_time,last_packet)
             if timed_out:
                 for t in sorted(timed_out):
                     #print("retransmitting: {}, at: {}".format(packets[t].get_packet(),time.time()))
                     sent_time[t] = time.time()
-                    self._send(packets[t])
+                    self._pld_send(packets[t])
         print ("last_received ack: {}, last_packet: {}".format(self.received_acknb,last_packet))
         return
 
     def _check_timeout(self,sent_time,last_packet):
         timed_out = []
         for t in sorted(sent_time):
-            if t<=last_packet and t>=self.received_acknb:
+            if t<=last_packet and t>self.received_acknb:
                 #print ("here: {}",sorted(sent_time))
                 if sent_time[t]+self.timeout<time.time():
                     timed_out.append(t)
@@ -327,10 +328,12 @@ class mysocket:
         rand = random.random()
         #print (rand)
         if rand > self.pdrop/100:
+            print ("sending:\t{}".format(packet.get_seq()))
             self._send(packet)
             return
         #print ("asked to drop")
-        print ("dropped: {}, and ack pack is {}".format(packet.get_packet(),packet.get_seq()))
+        print ("drpopping:\t{}".format(packet.get_seq()))
+        #print ("dropped: {}, and ack pack is {}".format(packet.get_packet(),packet.get_seq()))
         self._log(packet, "drp")
         return
 
@@ -365,7 +368,7 @@ class mysocket:
         buff = {}
         while True:
             pack, addr = self._receive()
-            print (pack.get_packet())
+            #print (pack.get_packet())
             if pack.packet_type() == 'F':
                 break
             if not data: #getting the expected packet size after receiving the first packet
@@ -392,7 +395,8 @@ class mysocket:
             ack.build_header([self.sport,self.dport,self.seq_nb,int(self.ack_nb),'1','0','0','0'])
             self.seq_nb = str(int(self.seq_nb)+len(ack.get_payload()))
             self._send(ack)
-            print ("sent ack with num: {}, and ack pack is {}".format(int(self.ack_nb), ack.get_packet()))
+            print ("received:\t{}".format(int(pack.get_seq())))
+            print ("sent ack:\t{}".format(int(self.ack_nb)))
 
             #print (pack.get_packet())
 
