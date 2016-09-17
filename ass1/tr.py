@@ -4,6 +4,7 @@ import sys
 import packet
 import pickle
 from mysocket import *
+import sys
 
 ip = "127.0.0.1"
 port = 5967
@@ -28,4 +29,10 @@ s = mysocket()
 s.bind(port)
 print(s.accept_handshake())
 s.print_all()
+s.set_param(0, 0, 0, 0, 'receive.log')
+# p = packet()
+# p.build_header(['5967','5967','1',int(s.ack_nb)+1,'1','0','0','0'])
+# s._send(p)
+s.receive_file('receive_file.txt')
+#print (int(s.ack_nb)+1, p.get_ack())
 s.close()

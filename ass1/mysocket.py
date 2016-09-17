@@ -13,6 +13,7 @@ class mysocket:
 
     def __init__(self):
         self.sock = socket(AF_INET,SOCK_DGRAM)
+        self.sock.setblocking(0) #non blocking circuit
         #self.sock.bind(('',0))
         self.sport = None
         self.dip = None
@@ -30,6 +31,8 @@ class mysocket:
         self.mws = None #bytes
         #time
         self.origin_time = None
+        self.data_len = None
+        self.log_file = None
 
 #socket send, receive, handshake, change param.
     def bind(self,port=None):
@@ -67,7 +70,7 @@ class mysocket:
         self.sock.settimeout(self.timeout)
         return
 
-    def set_param(self,mss,mws,pdrop,seed):
+    def set_param(self,mss,mws,pdrop,seed,log_file):
         '''
         Input:  pdrop as an float for the probability of dropping packet
                 seed as an int for generating the random number
@@ -78,6 +81,8 @@ class mysocket:
         self.mws = mws
         self.pdrop = pdrop
         self.seed = seed
+        self.log_file = open(log_file, 'w+')
+        return
 
 
 
@@ -87,6 +92,7 @@ class mysocket:
         Output: Closes circuit
         '''
         self.sock.close()
+        self.log_file.close()
         return
 
     def print_all(self):
@@ -94,7 +100,7 @@ class mysocket:
         Input:  None
         Output: Prints values of all socket variable
         '''
-        print("sock: {}\nsource port: {}\ndest ip: {}\ndest port {}\ntimeout: {}\nseq_nb: {}\nack_nb: {}\nisn: {}\nack_received_for: {}\nconnection established: {}".format(self.sock, self.sport,self.dip,self.dport,self.timeout,self.seq_nb,self.ack_nb,self.isn,self.received_acknb,self.connection_established))
+        print("sock: {}\nsource port: {}\ndest ip: {}\ndest port {}\ntimeout: {}\nseq_nb: {}\nack_nb: {}\nisn: {}\nack_received_for: {}\nconnection established: {}\ndata_len: {}".format(self.sock, self.sport,self.dip,self.dport,self.timeout,self.seq_nb,self.ack_nb,self.isn,self.received_acknb,self.connection_established,self.data_len))
         return
 
     def init_handshake(self):
@@ -135,7 +141,7 @@ class mysocket:
                 if bits == '1100':
                     received_synack = True
         receiver_seq_nb = pack.get_seq()
-        self.received_acknb = int(pack.get_ack())
+        self.received_acknb = int(pack.get_ack())-1
         self.ack_nb = str(int(receiver_seq_nb)+1)
 
         #<snd/rcv/drop> <time> <type of packet> <seq-number> <number-ofbytes> <ack-number>
@@ -156,7 +162,7 @@ class mysocket:
 #####################
 #####################
 
-
+        self.seq_nb = int(self.seq_nb)+1
         self.connection_established = syn_sent and received_synack and ack_sent
         return
 
@@ -182,7 +188,7 @@ class mysocket:
                 if bits == '0100':
                     received_syn = True
         receiver_seq_nb = pack.get_seq()
-        self.ack_nb = str(int(receiver_seq_nb)+1)
+        self.ack_nb = str(int(receiver_seq_nb)) #+1
         self.dip, self.dport = addr[0], str(addr[1])
         #sending SYNACK + ack number (X+1) + seq_nb (Y)
         synack_sent = False
@@ -208,7 +214,7 @@ class mysocket:
         '''
         Sender function to transmit file, connection should have been established already and set_param() must have been called
         Input: Takes string <path>/file_name.txt as the input argument
-        Output: Tries to reliably send the file Object accross to receiver
+        Output: Tries to reliably send the file Object accross to receiver by calling _transmit function
         '''
 
 
@@ -223,10 +229,108 @@ class mysocket:
 #error handling can be added
         send_file = open(file, 'rb')
         file_data = send_file.read()
-        payloads = []
+        self.data_len = len(file_data)
+        payloads = {}
         for i in range(0,len(file_data),self.mss):
-            payload = (i,file_data[i:i+self.mss])
-            payloads.append(payload)
+            payload = file_data[i:i+self.mss]
+            payloads[i+int(self.seq_nb)] = payload
+        packets = self._build_packets(payloads)
+        self._transmit(packets)
+        return
+
+    def _build_packets(self,payloads):
+        '''
+        Input: Takes paylaods
+        Output: Builds packets
+        '''
+        packets = {}
+        for i in sorted(payloads):
+            p = packet()
+            p.build_header([self.sport,self.dport, i,None,0,1,0,1])
+            p.build_payload (payloads[i])
+            packets[i] = p
+        return packets
+
+    def _transmit(self, packets):
+        '''
+        Input:  Takes pakcets
+        Output: Sends them reliably accross
+        '''
+        first_packet = int(self.isn)+1
+        last_packet = self.data_len//self.mss*self.mss+int(self.isn)+1
+        print (first_packet,last_packet)
+        for i in sorted(packets):
+           print (i, packets[i].get_packet())
+        sent_time = {} #dict keeping track of transmission times
+        while (self.received_acknb<last_packet):
+            while (self.seq_nb-self.received_acknb) <= self.mws and (self.seq_nb<=last_packet):
+                drop = self._pld()
+                if drop:
+                    print ("dropping: {}, at: {}".format(packets[self.seq_nb].get_packet(),time.time()))
+                    sent_time[self.seq_nb] = time.time()
+                    self._send(packets[self.seq_nb])
+                    self.seq_nb += self.mss
+                else:
+                    print ("transmitting: {}, at: {}".format(packets[self.seq_nb].get_packet(),time.time()))
+                    sent_time[self.seq_nb] = time.time()
+                    self._send(packets[self.seq_nb])
+                    self.seq_nb += self.mss
+
+
+            print ("listening at : {}".format(time.time()))
+            pack, addr = self._receive()
+            print ("done listening at : {}".format(time.time()))
+            if pack:
+                print ("received: {}, at: {}".format(pack.get_packet(),addr))
+                self.received_acknb = (int(pack.get_ack()))
+                print ("ACK NB RECEIVED: {}, last_packet: {}, sequence number: {}".format(self.received_acknb, last_packet,self.seq_nb))
+
+            timed_out = self._check_timeout(sent_time,last_packet)
+            if timed_out:
+                for t in sorted(timed_out):
+                    print("retransmitting: {}, at: {}".format(packets[t].get_packet(),time.time()))
+                    sent_time[t] = time.time()
+                    self._send(packets[t])
+        return
+
+    def _check_timeout(self,sent_time,last_packet):
+        timed_out = []
+        for t in sorted(sent_time):
+            if t<=last_packet and t>=self.received_acknb:
+                print ("here: {}",sorted(sent_time))
+                if sent_time[t]+self.timeout<time.time():
+                    timed_out.append(t)
+        return timed_out or None
+
+    def _pld(self):
+        random.seed(self.seed)
+        if random.random() > self.pdrop:
+            return False
+        #print ("asked to drop")
+        return True
+
+
+    def receive_file(self,file):
+        receive_file = open(file, 'wb')
+        nb_packets = 22
+        data = {}
+        pack = True
+        while nb_packets:
+            pack, addr = self._receive()
+            print (pack.get_packet())
+            self.ack_nb = int(pack.get_seq())
+            data [self.ack_nb] = pack.get_payload()
+            ack = packet()
+            ack.build_header(['5967','5967','1',int(self.ack_nb),'1','0','0','0'])
+            self._send(ack)
+            print ("sent ack with num: {}, and ack pack is {}".format(int(self.ack_nb), ack.get_packet()))
+            print (pack.get_packet())
+            nb_packets -= 1
+
+        for d in sorted(data):
+            receive_file.write(data[d])
+
+
         return
 
 
@@ -247,11 +351,18 @@ class mysocket:
         Input:  None
         Output: Returns a tuple of packet object (which was received) and addr
         '''
-        try:
-            msg, addr = self.sock.recvfrom(1024)
-            pack = pickle.loads(msg)
-        except timeout:
-            return None
+        pack = ''
+        while (not pack):
+            try:
+                msg, addr = self.sock.recvfrom(4096)
+                pack = pickle.loads(msg)
+            except timeout:
+                print ("timeout#4358356")
+                return (None, None)
+            except Exception:
+                #print (Exception)
+                continue
+        print (pack)
         return (pack, addr)
 
 
@@ -269,13 +380,15 @@ if __name__ == '__main__':
     s = mysocket()
     s.connect(('127.0.0.1',5967))
     s.set_timeout(10)
-    s.set_param(10, 40, 0, 50)
+    s.set_param(50, 100, 50, 50,'send.log')
     s.print_all()
     # p = packet()
     # p.build_payload('surya')
     # print(s._send(p))
     #print (s.init_handshake())
     #s.set_param(50, 200, 0, 50)
+    s.init_handshake()
+    s.print_all
     print (s.send_file('send_file.txt'))
     s.print_all()
     s.close()

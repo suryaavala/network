@@ -78,6 +78,7 @@ class packet:
         '''
         return str(self.get_header()[3])
 
+
     def packet_type(self):
         '''
         Input: None
@@ -109,7 +110,7 @@ class packet:
         Input:  Takes payload as string though input argument
         Output: Builds payload
         '''
-        self.payload = str(payload)
+        self.payload = (payload)
         return
 
     def build_packet(self,values,payload):
