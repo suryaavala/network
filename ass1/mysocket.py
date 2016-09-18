@@ -154,8 +154,8 @@ class mysocket:
                 syn_sent = self._send(sync)
         receiver_seq_nb = pack.get_seq()
         self.received_acknb = int(pack.get_ack())-1
-        self.ack_nb = str(int(receiver_seq_nb)+1)
-
+        #self.ack_nb = str(int(receiver_seq_nb)+1)
+        self.ack_nb = str(int(receiver_seq_nb))
 
         #sending ACK + acknum (Y+1)
         ack_sent = False
@@ -224,10 +224,84 @@ class mysocket:
         Input: None
         Output: Terminates connection with the receiver
         '''
-        fin_pack = packet()
-        fin_pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,0,0,1,0])
-        self._send(fin_pack)
-        return
+        #send fin
+        fin1 = False
+        while not fin1:
+            fin_pack = packet()
+            fin_pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,0,0,1,0])
+            fin1 = self._send(fin_pack)
+
+        #listen for ack
+        received_ack1 = False
+        received_fin2 = False
+        while (not received_ack1) and (not received_fin2):
+            pack, addr = self._receive()
+            if pack:
+                bits = pack.get_bits()
+                if bits == '1000':
+                    received_ack1 = True
+                elif bits == '0010':
+                    received_fin2 = True
+
+            else:
+                fin1 = self._send(fin_pack)
+
+        #listen for fin
+
+        while not received_fin2:
+            pack, addr = self._receive()
+            if pack:
+                bits = pack.get_bits()
+                if bits == '0010':
+                    received_fin2 = True
+        self.ack_nb = pack.get_seq()
+        #send ack2
+        ack2 = False
+        while not ack2:
+            ack2_pack = packet()
+            ack2_pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,1,0,0,0])
+            ack2 = self._send(ack2_pack)
+
+        print ("terminating connection")
+        return fin1 and  (received_ack1 or received_fin2) and ack2
+
+    def accept_termination(self,fin_pack):
+        '''
+        Receiver function to accept termination. This function is called by receive_file function.
+        Input:  Takes the Fin packet that came from the Sender
+        Output: Terminates connection
+        '''
+        #receive fin1
+        self.ack_nb = fin_pack.get_seq()
+        received_fin1 = True
+
+        #send ack1
+        ack1 = False
+        while not ack1:
+            ack1_pack = packet()
+            ack1_pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,1,0,0,0])
+            ack1 = self._send(ack1_pack)
+
+        #send fin2
+        fin2 = False
+        while not fin2:
+            fin2_pack = packet()
+            fin2_pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,0,0,1,0])
+            fin2 = self._send(fin2_pack)
+
+        #listen for ack2
+        received_ack2 = False
+        while not received_ack2:
+            pack, addr = self._receive()
+            if pack:
+                bits = pack.get_bits()
+                if bits == '1000':
+                    received_ack2 = True
+            else:
+                fin2 = self._send(fin2_pack)
+
+        print ("terminating connection")
+        return received_fin1 and ack1 and (fin2 or received_ack2)
 
     def send_file(self,file):
         '''
@@ -262,7 +336,7 @@ class mysocket:
         # fin_pack = packet()
         # fin_pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,0,0,1,0])
         # self._send(fin_pack)
-        self.seq_nb = int(self.ack_nb) + 1 #putting the sequence back to where it should be at this point
+        self.seq_nb = int(self.received_acknb) + 1 #putting the sequence back to where it should be at this point
         self.init_termination()
         return
 
@@ -380,10 +454,12 @@ class mysocket:
         size = True
         expected_seq = self.ack_nb
         buff = {}
+        fin_pack = None
         while True:
             pack, addr = self._receive()
             #print (pack.get_packet())
             if pack.packet_type() == 'F':
+                fin_pack = pack
                 break
             if not data: #getting the expected packet size after receiving the first packet
                 #print (type(self.ack_nb),type(int(len(pack.get_payload()))) )
@@ -419,6 +495,7 @@ class mysocket:
         for d in sorted(data):
             receive_file.write(data[d])
 
+        self.accept_termination(fin_pack)
 
         return
 
