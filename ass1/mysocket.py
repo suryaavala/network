@@ -87,7 +87,7 @@ class mysocket:
         '''
         self.mss = mss
         self.mws = mws
-        self.pdrop = pdrop
+        self.pdrop = float(pdrop)
         self.seed = seed
         random.seed(self.seed)
         return
@@ -218,6 +218,17 @@ class mysocket:
         self.connection_established = received_syn and synack_sent and received_ack
         return
 
+    def init_termination(self):
+        '''
+        Sender function to initiate connection termination
+        Input: None
+        Output: Terminates connection with the receiver
+        '''
+        fin_pack = packet()
+        fin_pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,0,0,1,0])
+        self._send(fin_pack)
+        return
+
     def send_file(self,file):
         '''
         Sender function to transmit file, connection should have been established already and set_param() must have been called
@@ -246,10 +257,13 @@ class mysocket:
             payloads[i+int(self.seq_nb)] = payload
         packets = self._build_packets(payloads)
         self._transmit(packets)
-
-        fin_pack = packet()
-        fin_pack.build_header([self.sport,self.dport,self.received_acknb+1,self.ack_nb,0,0,1,0])
-        self._send(fin_pack)
+        #print ("\nnumbers in the end seq:{}\nack:{}\nrack:{}\n".format(self.seq_nb,self.ack_nb,self.received_acknb))
+        # self.seq_nb = int(self.ack_nb) + 1
+        # fin_pack = packet()
+        # fin_pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,0,0,1,0])
+        # self._send(fin_pack)
+        self.seq_nb = int(self.ack_nb) + 1 #putting the sequence back to where it should be at this point
+        self.init_termination()
         return
 
     def _build_packets(self,payloads):
@@ -327,7 +341,7 @@ class mysocket:
 
         rand = random.random()
         #print (rand)
-        if rand > self.pdrop/100:
+        if rand > self.pdrop:
             print ("sending:\t{}".format(packet.get_seq()))
             self._send(packet)
             return
@@ -473,7 +487,8 @@ if __name__ == '__main__':
     s = mysocket()
     s.connect(('127.0.0.1',5967))
     s.set_timeout(10)
-    s.set_param(50, 100, 50, 50)
+    s.set_param(50, 100, 0.5, 50)
+    #s.set_param(mss, mws, pdrop, seed)
     s.set_logfile('send.log')
     s.print_all()
     # p = packet()
