@@ -1,6 +1,10 @@
 #Bug1: Receiver has to be started/run first otherwise sync sent by the sender is lost and
 #   the sender is stuck in an infinite loop waiting for sycnack
 #   the receiver is stuck in an infinite loop waiting for sync
+#Bug1: Fixed sender and receiver can be started in any order
+#ACK and SYN numbers are little different that the TCP
+#ACK number "X" is sent to acknowledge Received pack with SEQ "X"
+    #in tcp "X+1" would have been sent as an ACK
 
 from socket import *
 import time
@@ -132,12 +136,7 @@ class mysocket:
             pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,0,1,0,0])
             syn_sent = self._send(pack)
 
-        #<snd/rcv/drop> <time> <type of packet> <seq-number> <number-ofbytes> <ack-number>
-#######log###########
-#####################
-#####################
-
-
+        sync = pack
 ###can be improved keep sending syn requests until we receive an syncack back from receiver
         #listen for SYNACK
         received_synack = False
@@ -147,14 +146,11 @@ class mysocket:
                 bits = pack.get_bits()
                 if bits == '1100':
                     received_synack = True
+            else:
+                syn_sent = self._send(sync)
         receiver_seq_nb = pack.get_seq()
         self.received_acknb = int(pack.get_ack())-1
         self.ack_nb = str(int(receiver_seq_nb)+1)
-
-        #<snd/rcv/drop> <time> <type of packet> <seq-number> <number-ofbytes> <ack-number>
-#######log###########
-#####################
-#####################
 
 
         #sending ACK + acknum (Y+1)
@@ -163,11 +159,6 @@ class mysocket:
             pack = packet()
             pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,1,0,0,0])
             ack_sent = self._send(pack)
-
-        #<snd/rcv/drop> <time> <type of packet> <seq-number> <number-ofbytes> <ack-number>
-#######log###########
-#####################
-#####################
 
         self.seq_nb = int(self.seq_nb)+1
         self.connection_established = syn_sent and received_synack and ack_sent
@@ -204,6 +195,7 @@ class mysocket:
             pack = packet()
             pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,1,1,0,0])
             synack_sent = self._send(pack)
+        self.seq_nb = int(self.seq_nb)+ 1
         #Listening for ACK + acknum (Y+1)
 #improvement: keep sending syncack until ack is received back
         received_ack = False
@@ -380,8 +372,10 @@ class mysocket:
                 expected_seq += self.mss
                 self.ack_nb = int(pack.get_seq())
                 data [self.ack_nb] = pack.get_payload()
-            elif not buff: #if there is not buffer then add the packet to buffer
+            else: #if there is not buffer then add the packet to buffer
                 buff[int(pack.get_seq())] = pack.get_payload()
+
+
 
             if buff: #if buffer then check all the items in the buffer if expected pack is there in the buffer
                 for b in sorted(buff):
