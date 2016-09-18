@@ -1,3 +1,5 @@
+#PYTHON 3 ONLY, doesn't work with Python2
+
 #Bug1: Receiver has to be started/run first otherwise sync sent by the sender is lost and
 #   the sender is stuck in an infinite loop waiting for sycnack
 #   the receiver is stuck in an infinite loop waiting for sync
