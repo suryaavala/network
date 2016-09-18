@@ -393,10 +393,15 @@ class mysocket:
                 #print ("received: {}, at: {}".format(pack.get_packet(),addr))
                 if self.received_acknb == (int(pack.get_ack())):
                     #fast retransmit
-                    for p in sorted(packets):
-                        if p > self.received_acknb and p < self.seq_nb:
-                            sent_time[p] = time.time()
-                            self._pld_send(pakcets[p])
+                    # for p in sorted(packets):
+                    #     if p > self.received_acknb and p < self.seq_nb:
+                    #         print ("fast transmitting:{}".format(p))
+                    #         sent_time[p] = time.time()
+                    #         self._pld_send(packets[p])
+                    fast_retransmit = self.received_acknb+self.mss
+                    sent_time[fast_retransmit] = time.time()
+                    print ("fast transmitting:{}".format(fast_retransmit))
+                    self._pld_send(packets[fast_retransmit])
                 else:
                     self.received_acknb = (int(pack.get_ack()))
                 #print ("ACK NB RECEIVED: {}, last_packet: {}, sequence number: {}".format(self.received_acknb, last_packet,self.seq_nb))
