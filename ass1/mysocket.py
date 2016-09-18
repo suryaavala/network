@@ -39,7 +39,8 @@ class mysocket:
         self.data_len = None                    #size of data I am about to send
         self.log_file = None                    #name of my log file
         self.log_nb = 1                         #current log number
-
+        self.dup = 0                            #duplicate segments received
+        self.data_received = [0,0]              #(segments,size)
     def bind(self,port=None):
         '''
         Input:  Optional:   Takes port number
@@ -308,6 +309,15 @@ class mysocket:
             else:
                 fin2 = self._send(fin2_pack)
 
+        #writes final data into log file
+
+        #• Amount of (original) Data Received (in bytes) – do not include retransmitted data
+        #• Number of (original) Data Segments Received
+        #• Number of duplicate segments received (if any)
+
+        print('Amount of (original) Data Received (in bytes): {}'.format(self.data_received[1]), file=self.log_file)
+        print('Number of (original) Data Segments Received: {}'.format(self.data_received[0]), file=self.log_file)
+        print('Number of duplicate segments received (if any): {}'.format(self.dup), file=self.log_file)
         return received_fin1 and ack1 and (fin2 or received_ack2)
 
     def send_file(self,sfile):
@@ -452,6 +462,7 @@ class mysocket:
                 self.ack_nb = int(pack.get_seq())+1
                 data [self.ack_nb-1] = pack.get_payload()
             else: #if there is not buffer then add the packet to buffer
+                self.dup += 1
                 buff[int(pack.get_seq())] = pack.get_payload()
 
             if buff: #if buffer then check all the items in the buffer if expected pack is there in the buffer
@@ -468,8 +479,11 @@ class mysocket:
             self._send(ack)
 
         #writed data to receive_file
+        total_data = 0
         for d in sorted(data):
             receive_file.write(data[d])
+            total_data += len(data[d])
+        self.data_received = [len(sorted(data)),total_data]
 
         receive_file.close() #closes receive file
         self.accept_termination(fin_pack)
