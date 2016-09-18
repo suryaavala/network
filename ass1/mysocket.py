@@ -200,6 +200,8 @@ class mysocket:
         self.seq_nb = int(self.seq_nb)+ 1
         #Listening for ACK + acknum (Y+1)
 #improvement: keep sending syncack until ack is received back
+        synack = pack
+
         received_ack = False
         while (not received_ack):
             pack, addr = self._receive()
@@ -207,6 +209,8 @@ class mysocket:
                 bits = pack.get_bits()
                 if bits == '1000':
                     received_ack = True
+            else:
+                synack_sent = self._send(synack)
         self.received_acknb = pack.get_ack()
 
         self.connection_established = received_syn and synack_sent and received_ack
