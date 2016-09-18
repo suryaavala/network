@@ -1,3 +1,5 @@
+#Surya Avinash Avala, z5096886
+#required classes mysocket.py, packet.py
 from mysocket import *
 import sys
 

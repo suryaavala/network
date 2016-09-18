@@ -1,6 +1,9 @@
+#Surya Avinash Avala, z5096886
 #STP packet
 #header fields ["sport","dport","seq_nb","ack_nb","ACK","SYN","FIN","DATA"]
 #payload as string
+#head = {}
+#head[filed] = payload
 
 class packet:
 
