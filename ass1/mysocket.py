@@ -2,13 +2,12 @@
 #hosted on bitbucket as a private repo, will be made public after one week on the assignment deadline
 #git@bitbucket.org:saavala2/network.git
 
-#Bug1: Receiver has to be started/run first otherwise sync sent by the sender is lost and
-#   the sender is stuck in an infinite loop waiting for sycnack
-#   the receiver is stuck in an infinite loop waiting for sync
-#Bug1: Fixed sender and receiver can be started in any order
-#ACK and SYN numbers are little different that the TCP
-#ACK number "X" is sent to acknowledge Received pack with SEQ "X"
-    #in tcp "X+1" would have been sent as an ACK
+#Difference between traditional TCP and mysocket
+#1  #ACK and SYN numbers are little different that the TCP
+    #ACK number "X" is sent to acknowledge Received pack with SEQ "X"
+        #in tcp "X+1" would have been sent as an ACK
+#2  #fast restransmission is sent after one duplicate acknowledgement
+        #in tcp traditionally sent after 3 dup acks
 
 from socket import *
 import time
@@ -94,7 +93,7 @@ class mysocket:
 
     def set_logfile(self, filename):
         self.log_file = open(filename, 'w+')
-        print ('no.\ts/r/d\ttm\ttype\tseq_snt\tnbb\tack_rcv', file=self.log_file)
+        print ('no.\ts/r/d\ttm\t\ttype\tseq\tnbb\tack', file=self.log_file)
 
         return
 
@@ -262,7 +261,7 @@ class mysocket:
             ack2_pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,1,0,0,0])
             ack2 = self._send(ack2_pack)
 
-        print ("terminating connection")
+        #print ("terminating connection")
         return fin1 and  (received_ack1 or received_fin2) and ack2
 
     def accept_termination(self,fin_pack):
@@ -300,7 +299,7 @@ class mysocket:
             else:
                 fin2 = self._send(fin2_pack)
 
-        print ("terminating connection")
+        #print ("terminating connection")
         return received_fin1 and ack1 and (fin2 or received_ack2)
 
     def send_file(self,file):
@@ -324,8 +323,8 @@ class mysocket:
         file_data = send_file.read()
         self.data_len = len(file_data)
         payloads = {}
-        self.print_all()
-        print (self.seq_nb,self.ack_nb, self.received_acknb)
+        #self.print_all()
+        #print (self.seq_nb,self.ack_nb, self.received_acknb)
         for i in range(0,len(file_data),self.mss):
             payload = file_data[i:i+self.mss]
             payloads[i+int(self.seq_nb)] = payload
@@ -361,8 +360,8 @@ class mysocket:
         first_packet = int(self.isn)+1
         last_packet = self.data_len//self.mss*self.mss+int(self.isn)+1
         #print (first_packet,last_packet)
-        for i in sorted(packets):
-            print (i, packets[i].get_packet(),file=self.log_file)
+        #for i in sorted(packets):
+        #    print (i, packets[i].get_packet(),file=self.log_file)
         sent_time = {} #dict keeping track of transmission times
         while (int(self.received_acknb)<last_packet):
             while (int(self.seq_nb)-int(self.received_acknb)) <= self.mws and (int(self.seq_nb)<=last_packet):
@@ -400,12 +399,13 @@ class mysocket:
                     #         self._pld_send(packets[p])
                     fast_retransmit = self.received_acknb+self.mss
                     sent_time[fast_retransmit] = time.time()
-                    print ("fast transmitting:{}".format(fast_retransmit))
+                    #print ("fast transmitting:{}".format(fast_retransmit))
                     self._pld_send(packets[fast_retransmit])
+                    #pass
                 else:
                     self.received_acknb = (int(pack.get_ack()))
                 #print ("ACK NB RECEIVED: {}, last_packet: {}, sequence number: {}".format(self.received_acknb, last_packet,self.seq_nb))
-                print ("received:\t{}".format(pack.get_ack()))
+                #print ("received:\t{}".format(pack.get_ack()))
 
             timed_out = self._check_timeout(sent_time,last_packet)
             if timed_out:
@@ -413,7 +413,7 @@ class mysocket:
                     #print("retransmitting: {}, at: {}".format(packets[t].get_packet(),time.time()))
                     sent_time[t] = time.time()
                     self._pld_send(packets[t])
-        print ("last_received ack: {}, last_packet: {}".format(self.received_acknb,last_packet))
+        #print ("last_received ack: {}, last_packet: {}".format(self.received_acknb,last_packet))
         return
 
     def _check_timeout(self,sent_time,last_packet):
@@ -430,11 +430,11 @@ class mysocket:
         rand = random.random()
         #print (rand)
         if rand > self.pdrop:
-            print ("sending:\t{}".format(packet.get_seq()))
+            #print ("sending:\t{}".format(packet.get_seq()))
             self._send(packet)
             return
         #print ("asked to drop")
-        print ("drpopping:\t{}".format(packet.get_seq()))
+        #print ("drpopping:\t{}".format(packet.get_seq()))
         #print ("dropped: {}, and ack pack is {}".format(packet.get_packet(),packet.get_seq()))
         self._log(packet, "drp")
         return
@@ -501,8 +501,8 @@ class mysocket:
             ack.build_header([self.sport,self.dport,self.seq_nb,int(self.ack_nb),'1','0','0','0'])
             self.seq_nb = str(int(self.seq_nb)+len(ack.get_payload()))
             self._send(ack)
-            print ("received:\t{}".format(int(pack.get_seq())))
-            print ("sent ack:\t{}".format(int(self.ack_nb)))
+            #print ("received:\t{}".format(int(pack.get_seq())))
+            #print ("sent ack:\t{}".format(int(self.ack_nb)))
 
             #print (pack.get_packet())
 
@@ -581,16 +581,16 @@ if __name__ == '__main__':
     s.set_param(50, 100, 0.5, 50)
     #s.set_param(mss, mws, pdrop, seed)
     s.set_logfile('send.log')
-    s.print_all()
+    #s.print_all()
     # p = packet()
     # p.build_payload('surya')
     # print(s._send(p))
     #print (s.init_handshake())
     #s.set_param(50, 200, 0, 50)
     s.init_handshake()
-    s.print_all
-    print (s.send_file('send_file.txt'))
-    s.print_all()
+    #s.print_all
+    s.send_file('send_file.txt')
+    #s.print_all()
     s.close()
 
     #print ('ran')

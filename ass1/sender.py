@@ -16,16 +16,9 @@ s.set_timeout(timeout)
 s.set_param(mss, mws, pdrop, seed)
 
 s.set_logfile('Sender_log.txt')
-#s.print_all()
-# p = packet()
-# p.build_payload('surya')
-# print(s._send(p))
-#print (s.init_handshake())
-#s.set_param(50, 200, 0, 50)
-s.init_handshake()
-#s.print_all
-s.send_file(file_name)
-#s.print_all()
-s.close()
 
-#print ('ran')
+s.init_handshake()
+
+s.send_file(file_name)
+
+s.close()
