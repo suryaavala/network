@@ -1,4 +1,6 @@
 #PYTHON 3 ONLY, doesn't work with Python2
+#hosted on bitbucket as a private repo, will be made public after one week on the assignment deadline
+#git@bitbucket.org:saavala2/network.git
 
 #Bug1: Receiver has to be started/run first otherwise sync sent by the sender is lost and
 #   the sender is stuck in an infinite loop waiting for sycnack
