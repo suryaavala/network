@@ -9,7 +9,7 @@ file_name = sys.argv[2]
 r = mysocket()
 r.bind(port)
 
-r.set_logfile('Receive_log.txt')
+r.set_logfile('Receiver_log.txt')
 
 r.accept_handshake()
 

@@ -8,7 +8,7 @@ mws = int(sys.argv[4])
 mss = int(sys.argv[5])
 timeout = int(sys.argv[6])/1000
 pdrop = float(sys.argv[7])
-seed = int(sys.argv[8])
+seed = float(sys.argv[8])
 
 s = mysocket()
 s.connect((r_host,r_port))

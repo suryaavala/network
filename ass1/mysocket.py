@@ -4,8 +4,7 @@
 
 #Difference between traditional TCP and mysocket
 #1  #ACK and SYN numbers are little different that the TCP
-    #ACK number "X" is sent to acknowledge Received pack with SEQ "X"
-        #in tcp "X+1" would have been sent as an ACK
+        #For data packets, each packet is treated as ONE byte irrespective of actual number of bytes transmitted
 #2  #fast restransmission is sent after one duplicate acknowledgement
         #in tcp traditionally sent after 3 dup acks
 
@@ -138,16 +137,17 @@ class mysocket:
         if not (self.sport and self.dip and self.dport and self.seq_nb and self.ack_nb):
             return False
 
-        #sending SYN
+        #sending SYN X
         syn_sent = False
         while (not syn_sent):
             pack = packet()
             pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,0,1,0,0])
             syn_sent = self._send(pack)
 
+        self.seq_nb = int(self.seq_nb)+1
         sync = pack
 
-        #listen for SYNACK
+        #listen for SYNACK X+1, Y
         received_synack = False
         while (not received_synack):
             pack, addr = self._receive()
@@ -158,17 +158,17 @@ class mysocket:
             else:
                 syn_sent = self._send(sync)
         receiver_seq_nb = pack.get_seq()
-        self.received_acknb = int(pack.get_ack())-1
-        self.ack_nb = str(int(receiver_seq_nb))
+        self.received_acknb = int(pack.get_ack())
+        self.ack_nb = str(int(receiver_seq_nb)+1)
 
-        #sending ACK + acknum (Y)
+        #sending ACK + acknum (Y+1)
         ack_sent = False
         while (not ack_sent):
             pack = packet()
             pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,1,0,0,0])
             ack_sent = self._send(pack)
 
-        self.seq_nb = int(self.seq_nb)+1
+        #self.seq_nb = int(self.seq_nb)+1
         self.connection_established = syn_sent and received_synack and ack_sent
         return
 
@@ -195,10 +195,10 @@ class mysocket:
                 if bits == '0100':
                     received_syn = True
         receiver_seq_nb = pack.get_seq()
-        self.ack_nb = str(int(receiver_seq_nb)) #+1
+        self.ack_nb = str(int(receiver_seq_nb)+1)
         self.dip, self.dport = addr[0], str(addr[1])
 
-        #sending SYNACK + ack number (X) + seq_nb (Y)
+        #sending SYNACK + ack number (X+1) + seq_nb (Y)
         synack_sent = False
         while (not synack_sent):
             pack = packet()
@@ -206,7 +206,7 @@ class mysocket:
             synack_sent = self._send(pack)
         self.seq_nb = int(self.seq_nb)+ 1
 
-        #Listening for ACK + acknum (Y)
+        #Listening for ACK + acknum (Y+1)
         synack = pack
 
         received_ack = False
@@ -236,6 +236,8 @@ class mysocket:
             fin_pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,0,0,1,0])
             fin1 = self._send(fin_pack)
 
+        self.seq_nb = int(self.seq_nb) + 1
+
         #listen for ack
         received_ack1 = False
         received_fin2 = False
@@ -251,15 +253,15 @@ class mysocket:
             else:
                 fin1 = self._send(fin_pack)
 
+        self.received_acknb = int(pack.get_ack())
         #listen for fin
-
         while not received_fin2:
             pack, addr = self._receive()
             if pack:
                 bits = pack.get_bits()
                 if bits == '0010':
                     received_fin2 = True
-        self.ack_nb = pack.get_seq()
+        self.ack_nb = int(pack.get_seq())+1
 
         #send ack2
         ack2 = False
@@ -277,7 +279,7 @@ class mysocket:
         Output: Terminates connection
         '''
         #receive fin1
-        self.ack_nb = fin_pack.get_seq()
+        self.ack_nb = int(fin_pack.get_seq())+1
         received_fin1 = True
 
         #send ack1
@@ -294,6 +296,7 @@ class mysocket:
             fin2_pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,0,0,1,0])
             fin2 = self._send(fin2_pack)
 
+        self.seq_nb = int(self.seq_nb) + 1
         #listen for ack2
         received_ack2 = False
         while not received_ack2:
@@ -330,8 +333,7 @@ class mysocket:
 
         #transmitting those packets accross
         self._transmit(packets)
-        self.seq_nb = int(self.received_acknb) + 1 #putting the sequence back to where it should be at this point
-
+        self.seq_nb = int(self.received_acknb) #+length of last payload #putting the sequence back to where it should be at this point
         send_file.close()               #closing sender file
         self.init_termination()
         return
@@ -356,15 +358,14 @@ class mysocket:
         Input:  Takes pakcets
         Output: Transmitss them reliably accross
         '''
-        last_packet = self.data_len//self.mss*self.mss+int(self.isn)+1
-
+        last_packet = self.data_len//self.mss*self.mss+int(self.seq_nb)
         sent_time = {}          #dict keeping track of transmission times
 
         #loop while most recent ack received is less than sequence number of last packet
         while (int(self.received_acknb)<last_packet):
 
 #event1:            #send packets until mws is reached
-            while (int(self.seq_nb)-int(self.received_acknb)) <= self.mws and (int(self.seq_nb)<=last_packet):
+            while (int(self.seq_nb)-int(self.received_acknb)) < self.mws and (int(self.seq_nb)<=last_packet):
                 sent_time[self.seq_nb] = time.time()
                 self._pld_send(packets[self.seq_nb])
                 self.seq_nb += self.mss
@@ -375,7 +376,8 @@ class mysocket:
             pack, addr = self._receive()
             if pack:        #if not timeouted
                 if self.received_acknb == (int(pack.get_ack())):    #check for duplicate ack, then retransmit the next pack after dup ack
-                    fast_retransmit = self.received_acknb+self.mss
+
+                    fast_retransmit = self.received_acknb+self.mss-1
                     sent_time[fast_retransmit] = time.time()
                     self._pld_send(packets[fast_retransmit])
                 else:
@@ -399,7 +401,7 @@ class mysocket:
         '''
         timed_out = []
         for t in sorted(sent_time):
-            if t<=last_packet and t>self.received_acknb:
+            if t<=last_packet and t>=self.received_acknb:
                 if sent_time[t]+self.timeout<time.time():
                     timed_out.append(t)
         return timed_out or None
@@ -443,13 +445,12 @@ class mysocket:
 
             if not data: #getting the expected packet size after receiving the first packet
                 self.mss = int(len(pack.get_payload()))
-                #expected_seq = int(self.ack_nb)+1
-                expected_seq = int(pack.get_seq()) + self.mss
+                expected_seq = int(self.ack_nb)
 
             if int(pack.get_seq()) == expected_seq: #the seq received is expected then go ahead append to data and send an ack for it
                 expected_seq += self.mss
-                self.ack_nb = int(pack.get_seq())
-                data [self.ack_nb] = pack.get_payload()
+                self.ack_nb = int(pack.get_seq())+1
+                data [self.ack_nb-1] = pack.get_payload()
             else: #if there is not buffer then add the packet to buffer
                 buff[int(pack.get_seq())] = pack.get_payload()
 
@@ -457,7 +458,7 @@ class mysocket:
                 for b in sorted(buff):
                     if b == expected_seq:
                         data[b] = buff.pop(b, None)
-                        self.ack_nb = expected_seq          #cummulative ack
+                        self.ack_nb = expected_seq+1          #cummulative ack
                         expected_seq += self.mss
 
 
@@ -474,7 +475,6 @@ class mysocket:
         self.accept_termination(fin_pack)
 
         return
-
 
     def _send(self,pack):
         '''
@@ -511,7 +511,7 @@ class mysocket:
         pack = ''
         while (not pack):
             try:
-                msg, addr = self.sock.recvfrom(4096)
+                msg, addr = self.sock.recvfrom(1024)
                 pack = pickle.loads(msg)
             except timeout:
                 return (None, None)
