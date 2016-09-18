@@ -12,9 +12,9 @@ seed = int(sys.argv[8])
 
 s = mysocket()
 s.connect((r_host,r_port))
+
 s.set_timeout(timeout)
 s.set_param(mss, mws, pdrop, seed)
-
 s.set_logfile('Sender_log.txt')
 
 s.init_handshake()

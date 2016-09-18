@@ -19,29 +19,28 @@ import pickle
 class mysocket:
 
     def __init__(self):
-        self.sock = socket(AF_INET,SOCK_DGRAM)
-        self.sock.setblocking(0) #non blocking circuit
-        #self.sock.bind(('',0))
-        self.sport = None
-        self.dip = None
-        self.dport = None
-        self.timeout = None
-        self.seq_nb = str(int(random.random()*100)) #my sequence number transmitted
-        self.ack_nb = -1 #ack number sent
-        self.received_acknb = str(0) #ack received
-        self.isn = self.seq_nb
-        #can implement self.sock_status to keep track of connection
-        self.connection_established = None
-        self.pdrop = None
-        self.seed = None
-        self.mss =  None #bytes
-        self.mws = None #bytes
+        self.sock = socket(AF_INET,SOCK_DGRAM)  #udp socket
+        self.sock.setblocking(0)                #non blocking circuit
+        self.sport = None                       #source port
+        self.dip = None                         #destination ip
+        self.dport = None                       #destination port
+        self.timeout = None                     #timeout value in seconds
+        self.seq_nb = str(int(random.random()*100)) #my sequence number
+        self.ack_nb = -1                        #ack number I have sent
+        self.received_acknb = str(0)            #ack number I have received
+        self.isn = self.seq_nb                  #isn
+#can implement self.sock_status to keep track of connection
+        self.connection_established = None      #is connection established or not
+        self.pdrop = None                       #probability of packet drop
+        self.seed = None                        #seed for the random number
+        self.mss =  None                        #mss in bytes
+        self.mws = None                         #mws in bytes
         #time
-        self.origin_time = None
-        self.data_len = None
-        self.log_file = None
-        self.log_nb = 1
-#socket send, receive, handshake, change param.
+        self.origin_time = None                 #time when handshake was started
+        self.data_len = None                    #size of data I am about to send
+        self.log_file = None                    #name of my log file
+        self.log_nb = 1                         #current log number
+
     def bind(self,port=None):
         '''
         Input:  Optional:   Takes port number
@@ -52,7 +51,7 @@ class mysocket:
         if port:
             self.sock.bind(('',port))
         else:
-            self.sock.bind(('',0))
+            self.sock.bind(('',0))                  #letting the OS choose the port number randomly, for sender
         self.sport = self.sock.getsockname()[1]
         return
 
@@ -65,11 +64,12 @@ class mysocket:
         '''
         self.dip = str(addr[0])
         self.dport = str(addr[1])
-        self.bind()
+        self.bind()                 #binding my port number
         return
 
     def set_timeout(self, timeout):
         '''
+        Sender Function
         Input:  Takes timeout value in sec (int)
         Output: Sets the timeout of the socket
         '''
@@ -79,6 +79,7 @@ class mysocket:
 
     def set_param(self,mss,mws,pdrop,seed):
         '''
+        Sender Function
         Input:  pdrop as an float for the probability of dropping packet
                 seed as an int for generating the random number
 
@@ -88,10 +89,15 @@ class mysocket:
         self.mws = mws
         self.pdrop = float(pdrop)
         self.seed = seed
-        random.seed(self.seed)
+#CHECK AGAIN
+        random.seed(self.seed)              #seeding the random function already
         return
 
     def set_logfile(self, filename):
+        '''
+        Input:  Takes the filename for log_file
+        Output: Assigns it to the appropriate variable and prints out the head of log file
+        '''
         self.log_file = open(filename, 'w+')
         print ('no.\ts/r/d\ttm\t\ttype\tseq\tnbb\tack', file=self.log_file)
 
@@ -118,15 +124,15 @@ class mysocket:
 
     def init_handshake(self):
         '''
-        Sender function initiating the hand shake and establishing the connection.
+        Sender Function initiating the hand shake and establishing the connection.
         Socket has to be opened (opened by __init__) and the connection to destination must have been established (done by connect())
 
         Input:  None
         Output: True or False depending on when the connection was established successfully
         '''
         #SYN + sequence number (X: sender's sequence number)
-        #listen for SYNACK + ack number (x+1) + sequence number (Y: receiver's seq num)
-        #Send ACK + acknum (Y+1)
+        #listen for SYNACK + ack number (x) + sequence number (Y: receiver's seq num)
+        #Send ACK + acknum (Y)
         self.origin_time = time.time()
 
         if not (self.sport and self.dip and self.dport and self.seq_nb and self.ack_nb):
@@ -140,7 +146,7 @@ class mysocket:
             syn_sent = self._send(pack)
 
         sync = pack
-###can be improved keep sending syn requests until we receive an syncack back from receiver
+
         #listen for SYNACK
         received_synack = False
         while (not received_synack):
@@ -153,10 +159,9 @@ class mysocket:
                 syn_sent = self._send(sync)
         receiver_seq_nb = pack.get_seq()
         self.received_acknb = int(pack.get_ack())-1
-        #self.ack_nb = str(int(receiver_seq_nb)+1)
         self.ack_nb = str(int(receiver_seq_nb))
 
-        #sending ACK + acknum (Y+1)
+        #sending ACK + acknum (Y)
         ack_sent = False
         while (not ack_sent):
             pack = packet()
@@ -169,7 +174,7 @@ class mysocket:
 
     def accept_handshake(self):
         '''
-        Receiver function accepting the hand shake (which was initiated by Sender) and establishing the connection.
+        Receiver Function accepting the hand shake (which was initiated by Sender) and establishing the connection.
         Socket has to be opened (opened by __init__) and must have been bound to a port (done by bind())
         the connection to destination must have been NOT established (done by connect())
 
@@ -178,8 +183,8 @@ class mysocket:
         '''
         self.origin_time = time.time()
         #Listen for SYN + sequence number (X: sender's sequence number)
-        #Send SYNACK + ack number (x+1) + sequence number (Y: receiver's seq num)
-        #Listen for ACK + acknum (Y+1)
+        #Send SYNACK + ack number (x) + sequence number (Y: receiver's seq num)
+        #Listen for ACK + acknum (Y)
 
         #Listening for SYN + seq_nb
         received_syn = False
@@ -192,15 +197,16 @@ class mysocket:
         receiver_seq_nb = pack.get_seq()
         self.ack_nb = str(int(receiver_seq_nb)) #+1
         self.dip, self.dport = addr[0], str(addr[1])
-        #sending SYNACK + ack number (X+1) + seq_nb (Y)
+
+        #sending SYNACK + ack number (X) + seq_nb (Y)
         synack_sent = False
         while (not synack_sent):
             pack = packet()
             pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,1,1,0,0])
             synack_sent = self._send(pack)
         self.seq_nb = int(self.seq_nb)+ 1
-        #Listening for ACK + acknum (Y+1)
-#improvement: keep sending syncack until ack is received back
+
+        #Listening for ACK + acknum (Y)
         synack = pack
 
         received_ack = False
@@ -219,7 +225,7 @@ class mysocket:
 
     def init_termination(self):
         '''
-        Sender function to initiate connection termination
+        Sender Function to initiate connection termination
         Input: None
         Output: Terminates connection with the receiver
         '''
@@ -254,6 +260,7 @@ class mysocket:
                 if bits == '0010':
                     received_fin2 = True
         self.ack_nb = pack.get_seq()
+
         #send ack2
         ack2 = False
         while not ack2:
@@ -261,7 +268,6 @@ class mysocket:
             ack2_pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,1,0,0,0])
             ack2 = self._send(ack2_pack)
 
-        #print ("terminating connection")
         return fin1 and  (received_ack1 or received_fin2) and ack2
 
     def accept_termination(self,fin_pack):
@@ -299,48 +305,40 @@ class mysocket:
             else:
                 fin2 = self._send(fin2_pack)
 
-        #print ("terminating connection")
         return received_fin1 and ack1 and (fin2 or received_ack2)
 
-    def send_file(self,file):
+    def send_file(self,sfile):
         '''
-        Sender function to transmit file, connection should have been established already and set_param() must have been called
+        Sender Function to transmit file, connection should have been established already and set_param() must have been called
         Input: Takes string <path>/file_name.txt as the input argument
         Output: Tries to reliably send the file Object accross to receiver by calling _transmit function
         '''
 
-
-        #loop for sending
-        #if rand > pdrop: transmit
-            #else: drop packet
-        #mws
-            #self.seq_nb-(self.received_acknb-1) <= mws
-        #mss
-            #len(pack.payload()) <= mss
-
 #error handling can be added
-        send_file = open(file, 'rb')
-        file_data = send_file.read()
-        self.data_len = len(file_data)
-        payloads = {}
-        #self.print_all()
-        #print (self.seq_nb,self.ack_nb, self.received_acknb)
+        send_file = open(sfile, 'rb')           #opening send_file
+        file_data = send_file.read()            #reading data as bytes
+        self.data_len = len(file_data)          #size of total file
+        payloads = {}                           #payloads to be sent (divided in chunks of mss)
+
+        #diving file into chuncks of mss size and assigning sequence numbers to it
         for i in range(0,len(file_data),self.mss):
             payload = file_data[i:i+self.mss]
             payloads[i+int(self.seq_nb)] = payload
+
+        #building packets from payload chunks
         packets = self._build_packets(payloads)
+
+        #transmitting those packets accross
         self._transmit(packets)
-        #print ("\nnumbers in the end seq:{}\nack:{}\nrack:{}\n".format(self.seq_nb,self.ack_nb,self.received_acknb))
-        # self.seq_nb = int(self.ack_nb) + 1
-        # fin_pack = packet()
-        # fin_pack.build_header([self.sport,self.dport,self.seq_nb,self.ack_nb,0,0,1,0])
-        # self._send(fin_pack)
         self.seq_nb = int(self.received_acknb) + 1 #putting the sequence back to where it should be at this point
+
+        send_file.close()               #closing sender file
         self.init_termination()
         return
 
     def _build_packets(self,payloads):
         '''
+        Sender Function
         Input: Takes paylaods
         Output: Builds packets
         '''
@@ -354,131 +352,99 @@ class mysocket:
 
     def _transmit(self, packets):
         '''
+        Sender Function
         Input:  Takes pakcets
-        Output: Sends them reliably accross
+        Output: Transmitss them reliably accross
         '''
-        first_packet = int(self.isn)+1
         last_packet = self.data_len//self.mss*self.mss+int(self.isn)+1
-        #print (first_packet,last_packet)
-        #for i in sorted(packets):
-        #    print (i, packets[i].get_packet(),file=self.log_file)
-        sent_time = {} #dict keeping track of transmission times
+
+        sent_time = {}          #dict keeping track of transmission times
+
+        #loop while most recent ack received is less than sequence number of last packet
         while (int(self.received_acknb)<last_packet):
+
+#event1:            #send packets until mws is reached
             while (int(self.seq_nb)-int(self.received_acknb)) <= self.mws and (int(self.seq_nb)<=last_packet):
-                #drop = self._pld()
-                # if drop:
-                #     #print ("dropping: {}, at: {}".format(packets[self.seq_nb].get_packet(),time.time()))
-                #     sent_time[self.seq_nb] = time.time()
-                #     #self._send(packets[self.seq_nb])
-                #     print ("dropping packet, seq_nb: {}, rcv ack: {}".format(self.seq_nb,self.received_acknb))
-                #     self._log(packets[self.seq_nb], "drp")
-                #     self.seq_nb += self.mss
-                # else:
-                #     #print ("transmitting: {}, at: {}".format(packets[self.seq_nb].get_packet(),time.time()))
-                #     sent_time[self.seq_nb] = time.time()
-                #     self._send(packets[self.seq_nb])
-                #     self.seq_nb += self.mss
-                #print (type(self.seq_nb))
                 sent_time[self.seq_nb] = time.time()
                 self._pld_send(packets[self.seq_nb])
                 self.seq_nb += self.mss
 
 
 
-            #print ("listening at : {}".format(time.time()))
+#event2:            #listen for packets
             pack, addr = self._receive()
-            #print ("done listening at : {}".format(time.time()))
-            if pack:
-                #print ("received: {}, at: {}".format(pack.get_packet(),addr))
-                if self.received_acknb == (int(pack.get_ack())):
-                    #fast retransmit
-                    # for p in sorted(packets):
-                    #     if p > self.received_acknb and p < self.seq_nb:
-                    #         print ("fast transmitting:{}".format(p))
-                    #         sent_time[p] = time.time()
-                    #         self._pld_send(packets[p])
+            if pack:        #if not timeouted
+                if self.received_acknb == (int(pack.get_ack())):    #check for duplicate ack, then retransmit the next pack after dup ack
                     fast_retransmit = self.received_acknb+self.mss
                     sent_time[fast_retransmit] = time.time()
-                    #print ("fast transmitting:{}".format(fast_retransmit))
                     self._pld_send(packets[fast_retransmit])
-                    #pass
                 else:
                     self.received_acknb = (int(pack.get_ack()))
-                #print ("ACK NB RECEIVED: {}, last_packet: {}, sequence number: {}".format(self.received_acknb, last_packet,self.seq_nb))
-                #print ("received:\t{}".format(pack.get_ack()))
 
+
+#event 3:           #check for timeouts
             timed_out = self._check_timeout(sent_time,last_packet)
-            if timed_out:
+            if timed_out:       #if there are timedout packets retransmit them
                 for t in sorted(timed_out):
-                    #print("retransmitting: {}, at: {}".format(packets[t].get_packet(),time.time()))
                     sent_time[t] = time.time()
                     self._pld_send(packets[t])
-        #print ("last_received ack: {}, last_packet: {}".format(self.received_acknb,last_packet))
+
         return
 
     def _check_timeout(self,sent_time,last_packet):
+        '''
+        Checks for time outs in among the sent packets
+        Input:  sent_time dict (with seq_nb as keys and sent times as respective values) and last_packet (seq_nb of last packet)
+        Ouput:  Checks if packets (between last acked and last packet) are timed out. It returns a list of sequence numbers of all timedout packets.
+        '''
         timed_out = []
         for t in sorted(sent_time):
             if t<=last_packet and t>self.received_acknb:
-                #print ("here: {}",sorted(sent_time))
                 if sent_time[t]+self.timeout<time.time():
                     timed_out.append(t)
         return timed_out or None
 
     def _pld_send(self,packet):
-
+        '''
+        Pld send would drop the pack or send it as per the assignment specs
+        Input:  Takes packet object
+        Ouput:  Decides whether or not to send it and executes the desicion
+        '''
         rand = random.random()
-        #print (rand)
+        #send packet if rand > pdrop
         if rand > self.pdrop:
-            #print ("sending:\t{}".format(packet.get_seq()))
             self._send(packet)
             return
-        #print ("asked to drop")
-        #print ("drpopping:\t{}".format(packet.get_seq()))
-        #print ("dropped: {}, and ack pack is {}".format(packet.get_packet(),packet.get_seq()))
         self._log(packet, "drp")
         return
 
 
-    # def receive_file(self,file):
-    #     receive_file = open(file, 'wb')
-    #     nb_packets = 70
-    #     data = {}
-    #     pack = True
-    #     while nb_packets:
-    #         pack, addr = self._receive()
-    #         print (pack.get_packet())
-    #         self.ack_nb = int(pack.get_seq())
-    #         data [self.ack_nb] = pack.get_payload()
-    #         ack = packet()
-    #         ack.build_header([self.sport,self.dport,self.seq_nb,int(self.ack_nb),'1','0','0','0'])
-    #         self._send(ack)
-    #         print ("sent ack with num: {}, and ack pack is {}".format(int(self.ack_nb), ack.get_packet()))
-    #         #print (pack.get_packet())
-    #         nb_packets -= 1
-    #
-    #     for d in sorted(data):
-    #         receive_file.write(data[d])
-    #
-    #
-    #     return
-    def receive_file(self,file):
-        receive_file = open(file, 'wb')
-        data = {}
-        size = True
-        expected_seq = self.ack_nb
-        buff = {}
-        fin_pack = None
+    def receive_file(self,rfile):
+        '''
+        Receiver function to receive the transmitted file. Connection should have been established already.
+
+        Input: Takes string <path>/file_name.txt as the input argument
+        Output: Writes the data it receives as to the file name
+        '''
+        receive_file = open(rfile, 'wb')     #receiver_file
+        data = {}                            #data received will be stored here as per seq number
+        expected_seq = 0                     #sequence number of next expected packet
+        buff = {}                            #receivers buffer
+        fin_pack = None                      #fin pack that is received from the sender
+
+        #forever loop, breaks when a fin packet is received
         while True:
             pack, addr = self._receive()
-            #print (pack.get_packet())
+
+            #if the packet received is FIN, then the loop breaks
             if pack.packet_type() == 'F':
                 fin_pack = pack
                 break
+
             if not data: #getting the expected packet size after receiving the first packet
-                #print (type(self.ack_nb),type(int(len(pack.get_payload()))) )
                 self.mss = int(len(pack.get_payload()))
-                expected_seq = int(self.ack_nb)+1
+                #expected_seq = int(self.ack_nb)+1
+                expected_seq = int(pack.get_seq()) + self.mss
 
             if int(pack.get_seq()) == expected_seq: #the seq received is expected then go ahead append to data and send an ack for it
                 expected_seq += self.mss
@@ -487,13 +453,11 @@ class mysocket:
             else: #if there is not buffer then add the packet to buffer
                 buff[int(pack.get_seq())] = pack.get_payload()
 
-
-
             if buff: #if buffer then check all the items in the buffer if expected pack is there in the buffer
                 for b in sorted(buff):
                     if b == expected_seq:
                         data[b] = buff.pop(b, None)
-                        self.ack_nb = expected_seq
+                        self.ack_nb = expected_seq          #cummulative ack
                         expected_seq += self.mss
 
 
@@ -501,14 +465,12 @@ class mysocket:
             ack.build_header([self.sport,self.dport,self.seq_nb,int(self.ack_nb),'1','0','0','0'])
             self.seq_nb = str(int(self.seq_nb)+len(ack.get_payload()))
             self._send(ack)
-            #print ("received:\t{}".format(int(pack.get_seq())))
-            #print ("sent ack:\t{}".format(int(self.ack_nb)))
 
-            #print (pack.get_packet())
-
+        #writed data to receive_file
         for d in sorted(data):
             receive_file.write(data[d])
 
+        receive_file.close() #closes receive file
         self.accept_termination(fin_pack)
 
         return
@@ -532,18 +494,16 @@ class mysocket:
         return True
 
     def _log(self,pack,status):
-
-        # print ('{}\t{}\t{}\t{}\t{}\t{}\t{}'.format(self.log_nb,status,round(time.time()-self.origin_time,7),pack.packet_type(),self.seq_nb,len(pack.get_payload()),self.received_acknb), file=self.log_file)
-        # if status == 'rcv':
-        #     print ('{:}\t{:}\t{:f}\t{:}\t{:}\t{:}\t{:}'.format(self.log_nb,status,round(time.time()-self.origin_time,7),pack.packet_type(),pack.get_seq(),len(pack.get_payload()),int(self.received_acknb)+1), file=self.log_file)
-        #     self.log_nb += 1
-        #     return
-        # print ('{:}\t{:}\t{:f}\t{:}\t{:}\t{:}\t{:}'.format(self.log_nb,status,round(time.time()-self.origin_time,7),pack.packet_type(),self.seq_nb,len(pack.get_payload()),self.received_acknb), file=self.log_file)
+        '''
+        Logs data into the log file
+        Input:  Takes packet object and status "snd/rcv/drp"
+        Output: Logs accordingly
+        '''
         print ('{:}\t{:}\t{:f}\t{:}\t{:}\t{:}\t{:}'.format(self.log_nb,status,round(time.time()-self.origin_time,7),pack.packet_type(),pack.get_seq(),len(pack.get_payload()),pack.get_ack()), file=self.log_file)
         self.log_nb += 1
         return
 
-    def _receive(self,f=False):
+    def _receive(self):
         '''
         Input:  None
         Output: Returns a tuple of packet object (which was received) and addr
@@ -554,43 +514,24 @@ class mysocket:
                 msg, addr = self.sock.recvfrom(4096)
                 pack = pickle.loads(msg)
             except timeout:
-                #print ("timeout#4358356")
                 return (None, None)
             except Exception:
-                #print (Exception)
+                #since the circuit is non-blocking, it returns and exception if it doesnt receive any data. so we are just ignoring all those (but timeout) and listending again
                 continue
-        #print (pack)
         self._log(pack, "rcv")
         return (pack, addr)
-
-
-
-###########have to implement a custom buffer function for out of order packets##
-
-
 
 
 
 
 if __name__ == '__main__':
 
-    #print ("running")
+    #my tests
     s = mysocket()
     s.connect(('127.0.0.1',5967))
     s.set_timeout(10)
     s.set_param(50, 100, 0.5, 50)
-    #s.set_param(mss, mws, pdrop, seed)
     s.set_logfile('send.log')
-    #s.print_all()
-    # p = packet()
-    # p.build_payload('surya')
-    # print(s._send(p))
-    #print (s.init_handshake())
-    #s.set_param(50, 200, 0, 50)
     s.init_handshake()
-    #s.print_all
     s.send_file('send_file.txt')
-    #s.print_all()
     s.close()
-
-    #print ('ran')
