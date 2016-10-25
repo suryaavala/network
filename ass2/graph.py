@@ -4,3 +4,22 @@
 #git@bitbucket.org:saavala2/network.git
 
 #Class for implementation of Graphs
+
+class Node:
+    def __init__(self,name):
+        '''
+        Name is a string with the name of the node
+        '''
+        self.name = name
+
+    def getName(self):
+        '''
+        Returns the name of the Node
+        '''
+        return self.name
+
+    def __str__(self):
+        '''
+        Prints name
+        '''
+        return self.name
