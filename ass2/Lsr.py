@@ -13,6 +13,7 @@ import sys
 import time
 import pickle
 from socket import *
+from graph import *
 
 #getting input arguments
 node_ID = sys.argv[1]
@@ -43,39 +44,84 @@ for line in range(1,nb_neighbour+1):
     #print (name,cost,port)
     neighbour[name] = (cost,port)
 
+
+
+#Network graph from the neighbours
+net_graph = Graph()
+net_graph.addNode(node_ID)
+for k in sorted(neighbour.keys()):
+    net_graph.addNode(k)
+    e = (node_ID,k,neighbour[k][0])
+    net_graph.addEdge(e[0:2],e[2])
+
+
+
 #building LSR packets
 #E = [('A','B',2),('A','C',5),('A','D',1),('B','C',3),('B','D',2),('C','D',3),('C','E',1),('C','F',5),('D','E',1),('E','F',2)]
 
 ##-> Potential function here
-lsr = {}
+my_lsr = {}
 link = []
 for k in sorted(neighbour.keys()):
     link.append((node_ID,k,neighbour[k][0]))
-lsr[node_ID] = link
+my_lsr[node_ID] = link
 
+lsr = {} #recieved lsrs
 #broadcasting
-encoded_lsr = pickle.dumps(lsr)
+encoded_lsr = pickle.dumps(my_lsr)
 
-def broadcast(packet,audience):
+def broadcast(packet,audience,all=False):
+    if all:
+        for a in audience:
+            sock.sendto(packet,(ip,int(audience[a][1])))
+            #print ('sendmy',a)
+        return
+    encoded_packet = pickle.dumps(packet)
     for a in audience:
-        sock.sendto(encoded_lsr,(ip,int(a)))
+        sock.sendto(packet,(ip,int(a)))
+        #print ('sendto',a)
+    return
+
+def update_graph(lsr,net_graph):
+    for l in lsr:
+        try:
+            net_graph.addNode(l)
+        except Exception:
+            continue
+        try:
+            net_graph.addEdge(lsr[l])
+        except Exception:
+            continue
+    return
 
 start_broadcast = time.time()
 while True:
     if time.time()-start_broadcast>=update_interval:
         #then broadcast lsr-packet to neighbours
         #print('broadcasting')
-        ports = []
-        for n in neighbour:
-            ports.append(neighbour[n][1])
-        broadcast(encoded_lsr,ports)
+        broadcast(encoded_lsr,neighbour,True)
         start_broadcast = time.time()
 
     #listen for packets
     try:
         msg, addr = sock.recvfrom(1024)
         pack = pickle.loads(msg)
-        print (time.time(),pack)
+        for p in pack:
+            if p in lsr:
+                print(net_graph.getEdges())
+                continue
+            else:
+                lsr[p] = pack[p]
+                update_graph(lsr,net_graph)
+                audience = []
+                for n in neighbour:
+                    if n != p:
+                        audience.append(n)
+                print('sending received to',audience)
+                broadcast(pack, audience)
+
+        #print ('received:',time.time(),pack)
+        #print (net_graph.getEdges())
     except Exception:
         #since the circuit is non-blocking, it returns and exception if it doesnt receive any data. so we are just ignoring all those (but timeout) and listending again
         continue
