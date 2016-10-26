@@ -1,0 +1,465 @@
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Updated network graph: {('C', 'A'): '5', ('F', 'E'): '2', ('C', 'B'): '3', ('C', 'E'): '1', ('C', 'D'): '3', ('C', 'F'): '5'}
+
+C sending lsr from F to E
+
+C sending lsr from F to A
+
+C sending lsr from F to B
+
+C sending lsr from F to D
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Updated network graph: {('C', 'A'): '5', ('B', 'D'): '2', ('F', 'E'): '2', ('C', 'B'): '3', ('C', 'E'): '1', ('C', 'D'): '3', ('B', 'A'): '2', ('C', 'F'): '5'}
+
+C sending lsr from B to E
+
+C sending lsr from B to F
+
+C sending lsr from B to A
+
+C sending lsr from B to D
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Updated network graph: {('A', 'D'): '1', ('C', 'A'): '5', ('B', 'D'): '2', ('F', 'E'): '2', ('C', 'B'): '3', ('C', 'E'): '1', ('C', 'D'): '3', ('B', 'A'): '2', ('C', 'F'): '5'}
+
+C sending lsr from A to E
+
+C sending lsr from A to F
+
+C sending lsr from A to B
+
+C sending lsr from A to D
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Updated network graph: {('A', 'D'): '1', ('D', 'E'): '1', ('C', 'A'): '5', ('B', 'D'): '2', ('F', 'E'): '2', ('C', 'B'): '3', ('C', 'E'): '1', ('C', 'D'): '3', ('B', 'A'): '2', ('C', 'F'): '5'}
+
+C sending lsr from D to E
+
+C sending lsr from D to F
+
+C sending lsr from D to A
+
+C sending lsr from D to B
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Updated network graph: {('A', 'D'): '1', ('D', 'E'): '1', ('C', 'A'): '5', ('B', 'D'): '2', ('F', 'E'): '2', ('C', 'B'): '3', ('C', 'E'): '1', ('C', 'D'): '3', ('B', 'A'): '2', ('C', 'F'): '5'}
+
+C sending lsr from E to F
+
+C sending lsr from E to A
+
+C sending lsr from E to B
+
+C sending lsr from E to D
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
+C Received lsr: {'A': [('A', 'B', '2'), ('A', 'C', '5'), ('A', 'D', '1')]}
+C Received lsr: {'E': [('E', 'C', '1'), ('E', 'D', '1'), ('E', 'F', '2')]}
+C Received lsr: {'D': [('D', 'A', '1'), ('D', 'B', '2'), ('D', 'C', '3'), ('D', 'E', '1')]}
+C Received lsr: {'F': [('F', 'C', '5'), ('F', 'E', '2')]}
+C Received lsr: {'B': [('B', 'A', '2'), ('B', 'C', '3'), ('B', 'D', '2')]}
