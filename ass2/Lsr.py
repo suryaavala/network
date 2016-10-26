@@ -88,10 +88,14 @@ def update_graph(lsr,net_graph):
             net_graph.addNode(l)
         except Exception:
             continue
-        try:
-            net_graph.addEdge(lsr[l])
-        except Exception:
-            continue
+    for l in lsr:
+        #print ('l:{}'.format(l))
+        for e in lsr[l]:
+            try:
+                #print (e)
+                net_graph.addEdge(e[0:2],e[2])
+            except Exception:
+                continue
     return
 
 start_broadcast = time.time()
@@ -106,18 +110,21 @@ while True:
     try:
         msg, addr = sock.recvfrom(1024)
         pack = pickle.loads(msg)
+        print ('{} Received lsr: {}'.format(node_ID,pack))
         for p in pack:
             if p in lsr:
-                print(net_graph.getEdges())
+
                 continue
             else:
                 lsr[p] = pack[p]
+                #print('lsr:{}\npack:{}\nlsr[p]:{}\npack[p]:{}'.format(lsr,pack,lsr[p],pack[p]))
                 update_graph(lsr,net_graph)
+                print('{} Updated network graph: {}'.format(node_ID,net_graph.getEdges()))
                 audience = []
                 for n in neighbour:
                     if n != p:
-                        audience.append(n)
-                print('sending received to',audience)
+                        audience.append(neighbour[n][1])
+                        print('\n{} sending lsr from {} to {}'.format(node_ID, p, n))
                 broadcast(pack, audience)
 
         #print ('received:',time.time(),pack)
