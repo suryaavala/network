@@ -28,8 +28,10 @@ def dijkstra(u, graph):
     for n in nodes:
         if (n,u) in edges:
             D[n] = edges[(n,u)]
+            p[n] = u
         elif (u,n) in edges:
             D[n] = edges[(u,n)]
+            p[n] = u
         else:
             D[n] = float('inf')
 
@@ -54,7 +56,7 @@ def dijkstra(u, graph):
                 if D[w]+edges[n,w]<D[n]:
                     D[n] = D[w]+edges[n,w]
                     p[n] = w
-        #print (abs_N)
+    #print (abs_N)
     return p
 
 def shortest_path (src,dest, p):
@@ -70,11 +72,19 @@ def shortest_path (src,dest, p):
         else:
             v = n
     path.reverse()
-
     return path
 
-def routing_table(src,dest,nodes):
-    pass
+def routing_table(src,nodes,p):
+    routing = {}
+    for n in nodes:
+        if n != src:
+            sh_path = shortest_path(src, n, p)
+            #print(n,src,p)
+            if len(sh_path)==1:
+                routing[n] = n
+            else:
+                routing[n] = sh_path[1]
+    return routing
 
 if __name__ == '__main__':
     g = Graph()
@@ -92,3 +102,10 @@ if __name__ == '__main__':
     p = dijkstra('A', g)
     #print (p)
     #print (shortest_path('A', 'C', p))
+    #print (shortest_path('A', 'B', p))
+    r = routing_table('A',g.getNodes(),p)
+    print ('{}:{}'.format('dest','foward_to'))
+    keys = list(r.keys())
+    keys.sort()
+    for k in keys:
+        print ('{}: {}'.format(k,r[k]))
