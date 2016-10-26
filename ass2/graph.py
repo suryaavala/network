@@ -5,71 +5,70 @@
 
 #Class for implementation of Graphs
 
-class Node:
-    '''
-    Node object hold the name of the Node
-    '''
-    def __init__(self,name):
-        '''
-        Name is a string with the name of the node
-        '''
-        self.name = name
+# class Node:
+#     def __init__(self,name):
+#         '''
+#         Name as a string, for the name of the router
+#         '''
+#         self.name = name
+#
+#     def getName(self):
+#         return self.name
+#
+#     def __str__(self):
+#         return self.name
 
-    def getName(self):
-        '''
-        Returns the name of the Node
-        '''
-        return self.name
-
-    def __str__(self):
-        '''
-        Prints name
-        '''
-        return self.name
-
-class Edge:
-    '''
-    Assumes src, dst are nodes
-    Edge from src->dst
-    '''
-    def __init__(self,src,dst):
-        self.src = src
-        self.dst = dst
-
-    def getSource(self):
-        return self.src
-
-    def getDestination(self):
-        return self.dst
-
-    def __str__(self):
-        return self.src.getName() + '->' + self.dst.getName()
-
-
+# class Edge:
+#     def __init__(self,node,adjNodes):
+#         '''
+#         Input:  Node is the origin node
+#                 adjNode is the list of node which are adjacent to origin
+#         '''
+#         self.src = node
+#         self.dst = []
+#         for d in adjNodes:
+#             self.dst.append(d)
+#
+#     def getSource(self):
+#         return self.src
+#
+#     def getDestination(self):
+#         return self.dst
+#
+#     def __str__(self):
+#         return self.src + '->' + str(self.dst)
 
 class Graph:
-    '''
-    Edge is a dict with key as node name and value as a list of adj nodes
-    '''
-
     def __init__(self):
-        '''
-        Initiates dict edges
-        '''
-        self.edges = {}
+        self.graph = {}
 
-    def addNode(self, node):
-        if node in self.edges:
-            raise ValueError ("Duplicate Error")
+    def addNode(self,node):
+        if node in self.graph:
+            raise ValueError ('Duplicate Node')
         else:
-            self.edges[node] = []
+            self.graph[node] = []
 
-    def addEdge(self, node, edge):
-        pass
+    def addEdge(self,node,neighbour,cost=0):
+        if node not in self.graph:
+            raise ValueError ('Node not in Graph')
+        elif neighbour in self.graph[node]:
+            raise ValueError ('Duplicate neighbour')
+        else:
+            edge = (neighbour,cost)
+            self.graph[node].append(edge)
+
+
+
 
 
 if __name__ == "__main__":
-    src = Node('src')
-    dst = Node('dst')
-    e = Edge(src,dst)
-    print(e)
+    N = ['u','v','w','x','y','z']
+    E = [('u','v'), ('u','x'), ('v','x'), ('v','w'), ('x','w'), ('x','y'), ('w','y'), ('w','z'), ('y','z')]
+    g = Graph()
+    for n in N:
+        g.addNode(n)
+        for e in E:
+            if e[0] == n:
+                g.addEdge(n, e[1])
+
+    print(g.graph)
