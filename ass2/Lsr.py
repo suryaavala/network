@@ -46,6 +46,7 @@ for line in range(1,nb_neighbour+1):
 #building LSR packets
 #E = [('A','B',2),('A','C',5),('A','D',1),('B','C',3),('B','D',2),('C','D',3),('C','E',1),('C','F',5),('D','E',1),('E','F',2)]
 
+##-> Potential function here
 lsr = {}
 link = []
 for k in sorted(neighbour.keys()):
@@ -55,13 +56,29 @@ lsr[node_ID] = link
 #broadcasting
 encoded_lsr = pickle.dumps(lsr)
 
+def broadcast(packet,audience):
+    for a in audience:
+        sock.sendto(encoded_lsr,(ip,int(a)))
+
 start_broadcast = time.time()
 while True:
     if time.time()-start_broadcast>=update_interval:
         #then broadcast lsr-packet to neighbours
+        #print('broadcasting')
+        ports = []
         for n in neighbour:
-            sock.sendto(encoded_lsr,(ip,int(neighbour[n][1])))
+            ports.append(neighbour[n][1])
+        broadcast(encoded_lsr,ports)
         start_broadcast = time.time()
+
+    #listen for packets
+    try:
+        msg, addr = sock.recvfrom(1024)
+        pack = pickle.loads(msg)
+        print (time.time(),pack)
+    except Exception:
+        #since the circuit is non-blocking, it returns and exception if it doesnt receive any data. so we are just ignoring all those (but timeout) and listending again
+        continue
 
 
 
