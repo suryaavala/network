@@ -24,6 +24,7 @@ update_interval = 1
 sock = socket(AF_INET,SOCK_DGRAM)  #udp socket
 ip = '127.0.0.1'
 sock.bind((ip,node_Port))
+sock.setblocking(0)
 
 #extracting data out of config file
 try:
@@ -42,6 +43,7 @@ for line in range(1,nb_neighbour+1):
     #print (name,cost,port)
     neighbour[name] = (cost,port)
 
+#building LSR packets
 #E = [('A','B',2),('A','C',5),('A','D',1),('B','C',3),('B','D',2),('C','D',3),('C','E',1),('C','F',5),('D','E',1),('E','F',2)]
 
 lsr = {}
@@ -49,6 +51,17 @@ link = []
 for k in sorted(neighbour.keys()):
     link.append((node_ID,k,neighbour[k][0]))
 lsr[node_ID] = link
+
+#broadcasting
+encoded_lsr = pickle.dumps(lsr)
+
+start_broadcast = time.time()
+while True:
+    if time.time()-start_broadcast>=update_interval:
+        #then broadcast lsr-packet to neighbours
+        for n in neighbour:
+            sock.sendto(encoded_lsr,(ip,int(neighbour[n][1])))
+        start_broadcast = time.time()
 
 
 
