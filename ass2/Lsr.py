@@ -70,17 +70,20 @@ lsr = {} #recieved lsrs
 #broadcasting
 encoded_lsr = pickle.dumps(my_lsr)
 
-def broadcast(packet,audience,all=False):
-    if all:
+def broadcast(packet,audience,sock,nei=False):
+    if nei:
         for a in audience:
             sock.sendto(packet,(ip,int(audience[a][1])))
             #print ('sendmy',a)
         return
-    encoded_packet = pickle.dumps(packet)
-    for a in audience:
-        sock.sendto(packet,(ip,int(a)))
-        #print ('sendto',a)
-    return
+    else:
+        encoded_packet = pickle.dumps(packet)
+
+        for i in audience:
+            #print ("here ", audience)
+            sock.sendto(encoded_packet,(ip,int(i)))
+            #print ('there')
+        return
 
 def update_graph(lsr,net_graph):
     for l in lsr:
@@ -103,7 +106,7 @@ while True:
     if time.time()-start_broadcast>=update_interval:
         #then broadcast lsr-packet to neighbours
         #print('broadcasting')
-        broadcast(encoded_lsr,neighbour,True)
+        broadcast(encoded_lsr,neighbour,sock,True)
         start_broadcast = time.time()
 
     #listen for packets
@@ -112,21 +115,32 @@ while True:
         pack = pickle.loads(msg)
         print ('{} Received lsr: {}'.format(node_ID,pack))
         for p in pack:
-            if p in lsr:
-
-                continue
-            else:
-                lsr[p] = pack[p]
-                #print('lsr:{}\npack:{}\nlsr[p]:{}\npack[p]:{}'.format(lsr,pack,lsr[p],pack[p]))
-                update_graph(lsr,net_graph)
-                print('{} Updated network graph: {}'.format(node_ID,net_graph.getEdges()))
-                audience = []
-                for n in neighbour:
-                    if n != p:
-                        audience.append(neighbour[n][1])
-                        print('\n{} sending lsr from {} to {}'.format(node_ID, p, n))
-                broadcast(pack, audience)
-
+            # if p in lsr:
+            #
+            #     continue
+            # else:
+            #     lsr[p] = pack[p]
+            #     #print('lsr:{}\npack:{}\nlsr[p]:{}\npack[p]:{}'.format(lsr,pack,lsr[p],pack[p]))
+            #     update_graph(lsr,net_graph)
+            #     print('{} Updated network graph: {}'.format(node_ID,net_graph.getEdges()))
+            #     audience = []
+            #     for n in neighbour:
+            #         if n != p:
+            #             audience.append(neighbour[n][1])
+            #             print('\n{} sending lsr from {} to {}'.format(node_ID, p, n))
+            #     broadcast(pack, audience)
+            lsr[p] = pack[p]
+            #print('lsr:{}\npack:{}\nlsr[p]:{}\npack[p]:{}'.format(lsr,pack,lsr[p],pack[p]))
+            update_graph(lsr,net_graph)
+            print('{} Updated network graph: {}'.format(node_ID,net_graph.getEdges()))
+            audience = []
+            for n in neighbour:
+                if n != p:
+                    audience.append(neighbour[n][1])
+                    print('\n{} sending lsr {} to {}'.format(node_ID, pack.keys(), n))
+            print('audience: ',audience)
+            broadcast(pack, audience,sock)
+        
         #print ('received:',time.time(),pack)
         #print (net_graph.getEdges())
     except Exception:
