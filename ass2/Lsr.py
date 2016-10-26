@@ -44,10 +44,11 @@ for line in range(1,nb_neighbour+1):
 
 #E = [('A','B',2),('A','C',5),('A','D',1),('B','C',3),('B','D',2),('C','D',3),('C','E',1),('C','F',5),('D','E',1),('E','F',2)]
 
-lsr = []
-
+lsr = {}
+link = []
 for k in sorted(neighbour.keys()):
-    lsr.append((node_ID,k,neighbour[k][0]))
+    link.append((node_ID,k,neighbour[k][0]))
+lsr[node_ID] = link
 
 
 
