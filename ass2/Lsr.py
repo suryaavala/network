@@ -15,6 +15,7 @@ import pickle
 from socket import *
 from graph import *
 from threading import *
+from dijkstra import *
 
 #getting input arguments
 node_ID = sys.argv[1]
@@ -23,6 +24,7 @@ config_name = sys.argv[3]
 
 #other necessary variables
 update_interval = 1
+
 sock = socket(AF_INET,SOCK_DGRAM)  #udp socket
 ip = '127.0.0.1'
 sock.bind((ip,node_Port))
@@ -32,7 +34,7 @@ sock.setblocking(0)
 try:
     config_file = open(config_name, 'r')
 except Exception:
-    print ('Something wrong with config file, exiting...')
+    #print ('Something wrong with config file, exiting...')
     sys.exit()
 
 file_data = config_file.read().split('\n')
@@ -119,7 +121,7 @@ def listen():
         try:
             msg, addr = sock.recvfrom(1024)
             pack = pickle.loads(msg)
-            print ('{} Received lsr: {}'.format(node_ID,pack))
+            #print ('{} Received lsr: {}'.format(node_ID,pack))
             for p in pack:
                 if p in lsr:
 
@@ -128,13 +130,13 @@ def listen():
                     lsr[p] = pack[p]
                     #print('lsr:{}\npack:{}\nlsr[p]:{}\npack[p]:{}'.format(lsr,pack,lsr[p],pack[p]))
                     update_graph(lsr,net_graph)
-                    print('{} Updated network graph: {}'.format(node_ID,net_graph.getEdges()))
+                    #print('{} Updated network graph: {}'.format(node_ID,net_graph.getEdges()))
                     audience = []
                     for n in neighbour:
                         if n != p:
                             audience.append(neighbour[n][1])
-                            print('\n{} sending lsr {} to {}'.format(node_ID, pack.keys(), n))
-                    print('audience: ',audience)
+                            #print('\n{} sending lsr {} to {}'.format(node_ID, pack.keys(), n))
+                    #print('audience: ',audience)
                     broadcast(pack, audience,sock)
 
 
@@ -143,22 +145,41 @@ def listen():
         except Exception:
             #since the circuit is non-blocking, it returns and exception if it doesnt receive any data. so we are just ignoring all those (but timeout) and listending again
             continue
+def lcp_print():
+    start_lcp = time.time()
+    #print ('all_nodes : {}'.format(all_nodes))
+    while True:
+        if time.time()-start_lcp >= 30:
+            paths = dijkstra(node_ID, net_graph)
+            all_nodes = net_graph.getNodes()
+
+            for n in net_graph.getNodes():
+                #print ('claculating shortest path for {}'.format(n))
+                if n != node_ID:
+                    short_path = ''.join(shortest_path(node_ID,n,paths))+n
+                    print('Lcp from {} to {} is {}'.format(node_ID,n,short_path))
+                    start_lcp = time.time()
+
 
 t1 = Thread(target=ls_advertisement)
 t2 = Thread(target=listen)
+t3 = Thread(target=lcp_print)
 
 t1.start()
 t2.start()
+t3.start()
 
 t1.join()
 t2.join()
+t3.join()
 
 if __name__ == '__main__':
-    print (node_ID,node_Port,config_name,nb_neighbour)
+    #print (node_ID,node_Port,config_name,nb_neighbour)
 
     #lines = file_date.split("\n")
     #for line in lines:
     #    print (line.split())
-    print (file_data)
-    print (neighbour)
-    print(lsr)
+    #print (file_data)
+    #print (neighbour)
+    #print(lsr)
+    pass
