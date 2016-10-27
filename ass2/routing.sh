@@ -1,4 +1,7 @@
 #!/bin/bash
+
+trap 'kill $(jobs -p)' SIGINT SIGTERM EXIT
+
 # python3 Lsr.py A 2000 ./Topology1/configA.txt > ./output/outputA.txt &
 #
 #
@@ -13,7 +16,7 @@
 #
 # python3 Lsr.py F 2005 ./Topology1/configF.txt > ./output/outputF.txt &
 
-trap 'kill $(jobs -p)' SIGINT SIGTERM EXIT
+
 
 python3 Lsr.py A 2000 ./Topology1/configA.txt &
 
