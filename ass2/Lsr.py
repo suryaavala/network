@@ -103,14 +103,19 @@ def update_graph(lsr,net_graph):
     return
 
 def ls_advertisement():
+
     start_broadcast = time.time()
     while True:
+        # if len(net_graph.getEdges()) == 10:
+        #     print ('{} is done!'.format(node_ID))
         if time.time()-start_broadcast>=update_interval:
             broadcast(encoded_lsr,neighbour, sock, True)
             start_broadcast = time.time()
 
 def listen():
     while True:
+        # if len(net_graph.getEdges()) == 10:
+        #     print ('{} is done!'.format(node_ID))
         try:
             msg, addr = sock.recvfrom(1024)
             pack = pickle.loads(msg)

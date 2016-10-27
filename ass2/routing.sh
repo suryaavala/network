@@ -27,6 +27,6 @@ python3 Lsr.py D 2003 ./Topology1/configD.txt &
 
 python3 Lsr.py E 2004 ./Topology1/configE.txt &
 
-python3 Lsr.py F 2005 ./Topology1/configF.txt  &
+python3 Lsr.py F 2005 ./Topology1/configF.txt &
 
 sleep 60
