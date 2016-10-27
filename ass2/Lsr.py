@@ -14,6 +14,7 @@ import time
 import pickle
 from socket import *
 from graph import *
+from threading import *
 
 #getting input arguments
 node_ID = sys.argv[1]
@@ -101,44 +102,51 @@ def update_graph(lsr,net_graph):
                 continue
     return
 
-start_broadcast = time.time()
-while True:
-    if time.time()-start_broadcast>=update_interval:
-        #then broadcast lsr-packet to neighbours
-        #print('broadcasting')
-        broadcast(encoded_lsr,neighbour,sock,True)
-        start_broadcast = time.time()
+def ls_advertisement():
+    start_broadcast = time.time()
+    while True:
+        if time.time()-start_broadcast>=update_interval:
+            broadcast(encoded_lsr,neighbour, sock, True)
+            start_broadcast = time.time()
 
-    #listen for packets
-    try:
-        msg, addr = sock.recvfrom(1024)
-        pack = pickle.loads(msg)
-        print ('{} Received lsr: {}'.format(node_ID,pack))
-        for p in pack:
-            if p in lsr:
+def listen():
+    while True:
+        try:
+            msg, addr = sock.recvfrom(1024)
+            pack = pickle.loads(msg)
+            print ('{} Received lsr: {}'.format(node_ID,pack))
+            for p in pack:
+                if p in lsr:
 
-                continue
-            else:
-                lsr[p] = pack[p]
-                #print('lsr:{}\npack:{}\nlsr[p]:{}\npack[p]:{}'.format(lsr,pack,lsr[p],pack[p]))
-                update_graph(lsr,net_graph)
-                print('{} Updated network graph: {}'.format(node_ID,net_graph.getEdges()))
-                audience = []
-                for n in neighbour:
-                    if n != p:
-                        audience.append(neighbour[n][1])
-                        print('\n{} sending lsr {} to {}'.format(node_ID, pack.keys(), n))
-                print('audience: ',audience)
-                broadcast(pack, audience,sock)
-
-
-        #print ('received:',time.time(),pack)
-        #print (net_graph.getEdges())
-    except Exception:
-        #since the circuit is non-blocking, it returns and exception if it doesnt receive any data. so we are just ignoring all those (but timeout) and listending again
-        continue
+                    continue
+                else:
+                    lsr[p] = pack[p]
+                    #print('lsr:{}\npack:{}\nlsr[p]:{}\npack[p]:{}'.format(lsr,pack,lsr[p],pack[p]))
+                    update_graph(lsr,net_graph)
+                    print('{} Updated network graph: {}'.format(node_ID,net_graph.getEdges()))
+                    audience = []
+                    for n in neighbour:
+                        if n != p:
+                            audience.append(neighbour[n][1])
+                            print('\n{} sending lsr {} to {}'.format(node_ID, pack.keys(), n))
+                    print('audience: ',audience)
+                    broadcast(pack, audience,sock)
 
 
+            #print ('received:',time.time(),pack)
+            #print (net_graph.getEdges())
+        except Exception:
+            #since the circuit is non-blocking, it returns and exception if it doesnt receive any data. so we are just ignoring all those (but timeout) and listending again
+            continue
+
+t1 = Thread(target=ls_advertisement)
+t2 = Thread(target=listen)
+
+t1.start()
+t2.start()
+
+t1.join()
+t2.join()
 
 if __name__ == '__main__':
     print (node_ID,node_Port,config_name,nb_neighbour)
