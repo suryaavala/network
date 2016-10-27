@@ -115,32 +115,23 @@ while True:
         pack = pickle.loads(msg)
         print ('{} Received lsr: {}'.format(node_ID,pack))
         for p in pack:
-            # if p in lsr:
-            #
-            #     continue
-            # else:
-            #     lsr[p] = pack[p]
-            #     #print('lsr:{}\npack:{}\nlsr[p]:{}\npack[p]:{}'.format(lsr,pack,lsr[p],pack[p]))
-            #     update_graph(lsr,net_graph)
-            #     print('{} Updated network graph: {}'.format(node_ID,net_graph.getEdges()))
-            #     audience = []
-            #     for n in neighbour:
-            #         if n != p:
-            #             audience.append(neighbour[n][1])
-            #             print('\n{} sending lsr from {} to {}'.format(node_ID, p, n))
-            #     broadcast(pack, audience)
-            lsr[p] = pack[p]
-            #print('lsr:{}\npack:{}\nlsr[p]:{}\npack[p]:{}'.format(lsr,pack,lsr[p],pack[p]))
-            update_graph(lsr,net_graph)
-            print('{} Updated network graph: {}'.format(node_ID,net_graph.getEdges()))
-            audience = []
-            for n in neighbour:
-                if n != p:
-                    audience.append(neighbour[n][1])
-                    print('\n{} sending lsr {} to {}'.format(node_ID, pack.keys(), n))
-            print('audience: ',audience)
-            broadcast(pack, audience,sock)
-        
+            if p in lsr:
+
+                continue
+            else:
+                lsr[p] = pack[p]
+                #print('lsr:{}\npack:{}\nlsr[p]:{}\npack[p]:{}'.format(lsr,pack,lsr[p],pack[p]))
+                update_graph(lsr,net_graph)
+                print('{} Updated network graph: {}'.format(node_ID,net_graph.getEdges()))
+                audience = []
+                for n in neighbour:
+                    if n != p:
+                        audience.append(neighbour[n][1])
+                        print('\n{} sending lsr {} to {}'.format(node_ID, pack.keys(), n))
+                print('audience: ',audience)
+                broadcast(pack, audience,sock)
+
+
         #print ('received:',time.time(),pack)
         #print (net_graph.getEdges())
     except Exception:
