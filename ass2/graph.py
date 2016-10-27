@@ -84,6 +84,14 @@ class Graph:
     def getEdges(self):
         return self.edges
 
+    def getCost(self,src,dst):
+        temp = (src,dst)
+        if temp in self.edges:
+            return self.edges[temp]
+        temp = (dst,src)
+        if temp in self.edges:
+            return self.edges[temp]
+
 
 
 if __name__ == "__main__":
