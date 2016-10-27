@@ -85,6 +85,14 @@ def routing_table(src,nodes,p):
             else:
                 routing[n] = sh_path[1]
     return routing
+def cost_path(path,graph):
+    cost = 0
+    for n in range(len(path)-1):
+        cost += float(graph.getCost(path[n],path[n+1]))
+    return cost
+
+
+
 
 if __name__ == '__main__':
     g = Graph()
