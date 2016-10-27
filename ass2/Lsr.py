@@ -156,8 +156,11 @@ def lcp_print():
             for n in net_graph.getNodes():
                 #print ('claculating shortest path for {}'.format(n))
                 if n != node_ID:
-                    short_path = ''.join(shortest_path(node_ID,n,paths))+n
-                    print('Lcp from {} to {} is {}'.format(node_ID,n,short_path))
+                    short_path_list = shortest_path(node_ID,n,paths) + [n,]
+                    short_path = ''.join(short_path_list)
+                    cost = cost_path(short_path_list, net_graph)
+                    #print (node_ID)
+                    print('least-cost path to node {}: {} and the cost is {}'.format(n,short_path,cost))
                     start_lcp = time.time()
 
 
