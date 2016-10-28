@@ -27,10 +27,10 @@ def dijkstra(u, graph):
     p = {}
     for n in nodes:
         if (n,u) in edges:
-            D[n] = int(edges[(n,u)])
+            D[n] = float(edges[(n,u)])
             p[n] = u
         elif (u,n) in edges:
-            D[n] = int(edges[(u,n)])
+            D[n] = float(edges[(u,n)])
             p[n] = u
         else:
             D[n] = float('inf')
@@ -48,13 +48,13 @@ def dijkstra(u, graph):
                 continue
             if (w,n) in edges:
                 #D[n] = min(D[n],D[w]+edges[w,n])
-                if D[w]+int(edges[w,n])<D[n]:
-                    D[n] = D[w]+int(edges[w,n])
+                if D[w]+float(edges[w,n])<D[n]:
+                    D[n] = D[w]+float(edges[w,n])
                     p[n] = w
             elif (n,w) in edges:
                 #D[n] = min(D[n],D[w]+edges[n,w])
-                if D[w]+int(edges[n,w])<D[n]:
-                    D[n] = D[w]+int(edges[n,w])
+                if D[w]+float(edges[n,w])<D[n]:
+                    D[n] = D[w]+float(edges[n,w])
                     p[n] = w
     #print (abs_N)
     return p
