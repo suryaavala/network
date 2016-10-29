@@ -1,0 +1,16 @@
+graph g {
+    graph [ size = "6.5!" ];
+    A -- B [ len = 3.3, label = 3.3 ];
+    A -- D [ len = 9.9, label = 9.9 ];
+    A -- E [ len = 6.1, label = 6.1 ];
+    A -- F [ len = 6.1, label = 6.1 ];
+    B -- C [ len = 0.3, label = 0.3 ];
+    B -- D [ len = 8.7, label = 8.7 ];
+    B -- E [ len = 5.4, label = 5.4 ];
+    B -- F [ len = 7.5, label = 7.5 ];
+    C -- D [ len = 0.3, label = 0.3 ];
+    C -- E [ len = 4.1, label = 4.1 ];
+    C -- F [ len = 3.1, label = 3.1 ];
+    D -- F [ len = 7.5, label = 7.5 ];
+    E -- F [ len = 9.3, label = 9.3 ];
+}
