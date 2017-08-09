@@ -106,4 +106,4 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 
 * [Salil Kanhere](https://www.cse.unsw.edu.au/~salilk/) <br><br>
 
-##### < / > With :heart: Using [Python](https://www.python.org/) - Programming Language
+##### < / > With :heart: Using [Python](https://www.python.org/) 
