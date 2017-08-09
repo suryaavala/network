@@ -81,9 +81,7 @@ ls ass2/spec_ass2.pdf
 ```
 
 
-## Built With :heart: Using
 
-* [Python](https://www.python.org/) - Programming Language
 
 
 ## Contributing
@@ -106,4 +104,6 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 
 ## Acknowledgments
 
-* [Salil Kanhere](https://www.cse.unsw.edu.au/~salilk/)
+* [Salil Kanhere](https://www.cse.unsw.edu.au/~salilk/) <br><br>
+
+##### < / > With :heart: Using [Python](https://www.python.org/) - Programming Language
