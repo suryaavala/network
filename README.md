@@ -1,6 +1,6 @@
 # Assignment for COMP9331 - Computer Networks and Applications - UNSW 16s2
 
-This github repo is created as a part of the Assignments for [COMP9331 - Computer Networks and Applications](http://www.cse.unsw.edu.au/~cs9417) taught at [Unviersity of New South Wales](https://www.unsw.edu.au) during the Semester2 of 2016.
+This github repo is created as a part of the Assignments for [COMP9331 - Computer Networks and Applications](https://webcms3.cse.unsw.edu.au/COMP3331/16s2/) taught at [Unviersity of New South Wales](https://www.unsw.edu.au) during the Semester2 of 2016.
 
 #### Specifications
 
@@ -106,4 +106,4 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 
 * [Salil Kanhere](https://www.cse.unsw.edu.au/~salilk/) <br><br>
 
-##### < / > With :heart: Using [Python](https://www.python.org/) 
+##### < / > With :heart: Using [Python](https://www.python.org/)
